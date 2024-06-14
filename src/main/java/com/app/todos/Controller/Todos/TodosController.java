@@ -11,6 +11,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/todos")
@@ -24,6 +26,11 @@ public class TodosController {
         return ResponseEntity.ok(todosService.get(id));
     }
 
+    @GetMapping(value = "/all/{user_id}/")
+    public ResponseEntity<List<Todo>> all(@PathVariable BigInteger user_id) {
+        return ResponseEntity.ok(todosService.getAll(user_id));
+    }
+
     @PostMapping(value = "/new/")
     public ResponseEntity<String> newTodo(@RequestBody @Validated NewTodoDTO data) {
         todosService.newTodo(data);
@@ -31,8 +38,9 @@ public class TodosController {
     }
 
     @PutMapping(value = "/update/{id}/")
-    public ResponseEntity<String> update(@PathVariable BigInteger id, @RequestBody @Validated UpdateTodoDTO data) {
-        todosService.update(id, data);
+    public ResponseEntity<String> update(@PathVariable BigInteger id, @RequestBody @Validated UpdateTodoDTO data, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("Authorization").replace("Bearer ", "");
+        todosService.update(id, data, token);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

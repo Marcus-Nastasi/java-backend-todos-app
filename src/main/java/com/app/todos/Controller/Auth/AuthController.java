@@ -34,10 +34,10 @@ public class AuthController {
         authenticationManager.authenticate(auth);
         UserDetails u = userRepo.findByEmail(data.email());
 
-        return
+        return(
             passwordEncoder.matches(data.password(), u.getPassword()) ?
-            ResponseEntity.accepted().body(tokenService.generate(u.getUsername())) :
-            ResponseEntity.badRequest().build();
+            ResponseEntity.accepted().body(tokenService.generate(u.getUsername())) : ResponseEntity.badRequest().build()
+        );
     }
 
 }
