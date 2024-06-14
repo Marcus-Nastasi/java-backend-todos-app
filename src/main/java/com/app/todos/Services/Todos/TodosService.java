@@ -1,7 +1,7 @@
 package com.app.todos.Services.Todos;
 
 import com.app.todos.DTOs.Todos.NewTodoDTO;
-import com.app.todos.DTOs.Todos.UpdateDTO;
+import com.app.todos.DTOs.Todos.UpdateTodoDTO;
 import com.app.todos.Models.Todos.Todo;
 import com.app.todos.Repository.Todos.TodosRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class TodosService {
         todosRepo.save(t);
     }
 
-    public void update(BigInteger id, UpdateDTO data) {
+    public void update(BigInteger id, UpdateTodoDTO data) {
         Todo t = todosRepo.findById(id).orElseThrow();
 
         t.setClient(data.client());
