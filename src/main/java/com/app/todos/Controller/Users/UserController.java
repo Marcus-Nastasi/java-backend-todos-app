@@ -2,6 +2,7 @@ package com.app.todos.Controller.Users;
 
 import com.app.todos.DTOs.Users.NewUserDTO;
 import com.app.todos.DTOs.Users.UpdateDTO;
+import com.app.todos.Models.Users.User;
 import com.app.todos.Services.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping(value = "/get/{id}/")
+    public ResponseEntity<User> get(@PathVariable BigInteger id) {
+        return ResponseEntity.ok(userService.get(id));
+    }
+
     @PostMapping(value = "/new/")
     public ResponseEntity<String> newUser(@RequestBody @Validated NewUserDTO data) {
         userService.newUser(data);
@@ -27,6 +33,12 @@ public class UserController {
     @PutMapping(value = "/update/{id}/")
     public ResponseEntity<String> update(@RequestBody @Validated UpdateDTO data, @PathVariable BigInteger id) {
         userService.update(id, data);
+        return ResponseEntity.accepted().build();
+    }
+
+    @DeleteMapping(value = "/delete/{id}/")
+    public ResponseEntity<String> del(@PathVariable BigInteger id) {
+        userService.delete(id);
         return ResponseEntity.accepted().build();
     }
 }

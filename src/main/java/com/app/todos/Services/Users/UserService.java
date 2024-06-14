@@ -4,6 +4,7 @@ import com.app.todos.DTOs.Users.NewUserDTO;
 import com.app.todos.DTOs.Users.UpdateDTO;
 import com.app.todos.Models.Users.User;
 import com.app.todos.Repository.User.UserRepo;
+import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,10 @@ public class UserService {
     private UserRepo userRepo;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public User get(BigInteger id) {
+        return userRepo.findById(id).orElseThrow();
+    }
 
     public void newUser(NewUserDTO data) {
         String encoded = passwordEncoder.encode(data.password());
@@ -37,6 +42,10 @@ public class UserService {
         u.setPassword(encoded);
 
         userRepo.save(u);
+    }
+
+    public void delete(BigInteger id) {
+        userRepo.deleteById(id);
     }
 }
 
