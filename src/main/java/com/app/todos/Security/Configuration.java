@@ -16,6 +16,7 @@ public class Configuration extends DelegatingWebMvcConfiguration {
         return(
             httpSecurity.csrf(AbstractHttpConfigurer::disable)
                     .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .authorizeHttpRequests(http -> http.anyRequest().permitAll())
                     .build()
         );
     }
