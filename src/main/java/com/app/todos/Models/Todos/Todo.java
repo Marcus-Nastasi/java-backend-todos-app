@@ -29,6 +29,18 @@ public class Todo {
     @Enumerated(value = EnumType.ORDINAL)
     private Status status;
 
+    public Todo() {}
+
+    public Todo(BigInteger user_id, String client, String description, String link, LocalDate due) {
+        this.user_id = user_id;
+        this.client = client;
+        this.description = description;
+        this.link = link;
+        this.creation = LocalDate.now();
+        this.due = due;
+        this.status = Status.PENDING;
+    }
+
     public BigInteger getId() {
         return id;
     }
