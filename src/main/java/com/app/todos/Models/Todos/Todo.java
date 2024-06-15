@@ -1,5 +1,6 @@
 package com.app.todos.Models.Todos;
 
+import com.app.todos.Enums.Todos.Priority;
 import com.app.todos.Enums.Todos.Status;
 import jakarta.persistence.*;
 
@@ -18,6 +19,8 @@ public class Todo {
     @Column
     private String client;
     @Column
+    private String title;
+    @Column
     private String description;
     @Column
     private String link;
@@ -28,17 +31,22 @@ public class Todo {
     @Column
     @Enumerated(value = EnumType.ORDINAL)
     private Status status;
+    @Column
+    @Enumerated(value = EnumType.ORDINAL)
+    private Priority priority;
 
     public Todo() {}
 
-    public Todo(BigInteger user_id, String client, String description, String link, LocalDate due) {
+    public Todo(BigInteger user_id, String client, String title, String description, String link, LocalDate due, Priority priority) {
         this.user_id = user_id;
         this.client = client;
+        this.title = title;
         this.description = description;
         this.link = link;
         this.creation = LocalDate.now();
         this.due = due;
         this.status = Status.PENDING;
+        this.priority = priority;
     }
 
     public BigInteger getId() {
@@ -104,7 +112,24 @@ public class Todo {
     public void setStatus(Status status) {
         this.status = status;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
 }
+
 
 
 

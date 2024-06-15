@@ -2,7 +2,7 @@ package com.app.todos.Enums.Todos;
 
 public enum Status {
 
-    PENDING("pending"), STARTED("started"), DONE("done");
+    PENDING("pending"), PROGRESS("progress"), DONE("done");
 
     private final String status;
 
