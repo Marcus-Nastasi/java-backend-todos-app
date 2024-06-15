@@ -24,6 +24,7 @@ public class UserController {
         return ResponseEntity.ok(userService.get(id));
     }
 
+    @CrossOrigin(value = "http://localhost:3030")
     @PostMapping(value = "/new/")
     public ResponseEntity<String> newUser(@RequestBody @Validated NewUserDTO data) {
         userService.newUser(data);

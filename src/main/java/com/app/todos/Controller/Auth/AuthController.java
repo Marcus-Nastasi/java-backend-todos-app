@@ -10,10 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/auth")
@@ -28,6 +25,7 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @CrossOrigin(value = "http://localhost:3030")
     @PostMapping(value = "/login/")
     public ResponseEntity<String> login(@RequestBody @Valid LoginDTO data) {
         var auth = new UsernamePasswordAuthenticationToken(data.email(), data.password());
