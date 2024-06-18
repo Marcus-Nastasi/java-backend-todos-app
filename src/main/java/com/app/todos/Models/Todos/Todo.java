@@ -13,6 +13,7 @@ public class Todo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", columnDefinition = "bigint")
     private BigInteger id;
     @Column
     private BigInteger user_id;
