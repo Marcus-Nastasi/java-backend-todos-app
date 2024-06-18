@@ -21,22 +21,26 @@ public class TodosController {
     @Autowired
     private TodosService todosService;
 
+    @CrossOrigin(value = "http://localhost:3030")
     @GetMapping(value = "/get/{id}/")
     public ResponseEntity<Todo> getSingle(@PathVariable BigInteger id) {
         return ResponseEntity.ok(todosService.get(id));
     }
 
+    @CrossOrigin(value = "http://localhost:3030")
     @GetMapping(value = "/all/{user_id}/")
     public ResponseEntity<List<Todo>> all(@PathVariable BigInteger user_id) {
         return ResponseEntity.ok(todosService.getAll(user_id));
     }
 
+    @CrossOrigin(value = "http://localhost:3030")
     @PostMapping(value = "/new/")
     public ResponseEntity<String> newTodo(@RequestBody @Validated NewTodoDTO data) {
         todosService.newTodo(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @CrossOrigin(value = "http://localhost:3030")
     @PutMapping(value = "/update/{id}/")
     public ResponseEntity<String> update(@PathVariable BigInteger id, @RequestBody @Validated UpdateTodoDTO data, @RequestHeader Map<String, String> headers) {
         String token = headers.get("Authorization").replace("Bearer ", "");
@@ -44,6 +48,7 @@ public class TodosController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @CrossOrigin(value = "http://localhost:3030")
     @DeleteMapping(value = "/delete/{id}/")
     public ResponseEntity<String> delete(@PathVariable BigInteger id) {
         todosService.delete(id);

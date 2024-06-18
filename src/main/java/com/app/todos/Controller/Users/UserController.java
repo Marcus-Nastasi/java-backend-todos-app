@@ -19,6 +19,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @CrossOrigin(value = "http://localhost:3030")
     @GetMapping(value = "/get/{id}/")
     public ResponseEntity<User> get(@PathVariable BigInteger id) {
         return ResponseEntity.ok(userService.get(id));

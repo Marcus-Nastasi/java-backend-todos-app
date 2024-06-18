@@ -1,6 +1,7 @@
 package com.app.todos.Controller.Auth;
 
 import com.app.todos.DTOs.Auth.LoginDTO;
+import com.app.todos.Models.Users.User;
 import com.app.todos.Repository.User.UserRepo;
 import com.app.todos.Services.Auth.TokenService;
 import jakarta.validation.Valid;
@@ -31,13 +32,15 @@ public class AuthController {
         var auth = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         authenticationManager.authenticate(auth);
         UserDetails u = userRepo.findByEmail(data.email());
+        User uid = userRepo.findByUsername(u.getUsername());
+
+        String res = "{ \"token\": \"" + tokenService.generate(u.getUsername()) + "\", \"uid\": \"" + uid.getId() + "\"}";
 
         return(
             passwordEncoder.matches(data.password(), u.getPassword()) ?
-            ResponseEntity.accepted().body(tokenService.generate(u.getUsername())) : ResponseEntity.badRequest().build()
+            ResponseEntity.accepted().body(res) : ResponseEntity.badRequest().build()
         );
     }
-
 }
 
 
