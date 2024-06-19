@@ -32,12 +32,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("created");
     }
 
+    @CrossOrigin(value = "http://localhost:3030")
     @PutMapping(value = "/update/{id}/")
     public ResponseEntity<String> update(@RequestBody @Validated UpdateDTO data, @PathVariable BigInteger id) {
         userService.update(id, data);
         return ResponseEntity.accepted().build();
     }
 
+    @CrossOrigin(value = "http://localhost:3030")
     @DeleteMapping(value = "/delete/{id}/")
     public ResponseEntity<String> del(@PathVariable BigInteger id) {
         userService.delete(id);
