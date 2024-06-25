@@ -39,10 +39,12 @@ public class TodosService {
 
         if (!tokenService.validate(token).equals(u.getEmail())) return;
 
+        t.setTitle(data.title());
         t.setClient(data.client());
         t.setDescription(data.description());
         t.setLink(data.link());
         t.setDue(data.due());
+        t.setPriority(data.priority());
 
         todosRepo.save(t);
     }

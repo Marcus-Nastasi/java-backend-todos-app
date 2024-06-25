@@ -19,27 +19,27 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @CrossOrigin(value = "http://127.0.0.1:3030")
+    @CrossOrigin(value = "http://192.168.0.76:3030")
     @GetMapping(value = "/get/{id}/")
     public ResponseEntity<User> get(@PathVariable BigInteger id) {
         return ResponseEntity.ok(userService.get(id));
     }
 
-    @CrossOrigin(value = "http://127.0.0.1:3030")
+    @CrossOrigin(value = "http://192.168.0.76:3030")
     @PostMapping(value = "/new/")
     public ResponseEntity<String> newUser(@RequestBody @Validated NewUserDTO data) {
         userService.newUser(data);
         return ResponseEntity.status(HttpStatus.CREATED).body("created");
     }
 
-    @CrossOrigin(value = "http://127.0.0.1:3030")
+    @CrossOrigin(value = "http://192.168.0.76:3030")
     @PutMapping(value = "/update/{id}/")
     public ResponseEntity<String> update(@RequestBody @Validated UpdateDTO data, @PathVariable BigInteger id) {
         userService.update(id, data);
         return ResponseEntity.accepted().build();
     }
 
-    @CrossOrigin(value = "http://127.0.0.1:3030")
+    @CrossOrigin(value = "http://192.168.0.76:3030")
     @DeleteMapping(value = "/delete/{id}/")
     public ResponseEntity<String> del(@PathVariable BigInteger id) {
         userService.delete(id);
