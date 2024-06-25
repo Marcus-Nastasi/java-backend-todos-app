@@ -26,7 +26,7 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @CrossOrigin(value = "http://localhost:3030")
+    @CrossOrigin(value = "http://127.0.0.1:3030")
     @PostMapping(value = "/login/")
     public ResponseEntity<String> login(@RequestBody @Valid LoginDTO data) {
         var auth = new UsernamePasswordAuthenticationToken(data.email(), data.password());

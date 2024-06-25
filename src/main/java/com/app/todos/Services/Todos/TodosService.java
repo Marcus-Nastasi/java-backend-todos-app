@@ -1,6 +1,7 @@
 package com.app.todos.Services.Todos;
 
 import com.app.todos.DTOs.Todos.NewTodoDTO;
+import com.app.todos.DTOs.Todos.UpdStatusDTO;
 import com.app.todos.DTOs.Todos.UpdateTodoDTO;
 import com.app.todos.Models.Todos.Todo;
 import com.app.todos.Models.Users.User;
@@ -42,6 +43,17 @@ public class TodosService {
         t.setDescription(data.description());
         t.setLink(data.link());
         t.setDue(data.due());
+
+        todosRepo.save(t);
+    }
+
+    public void updateStatus(BigInteger id, UpdStatusDTO data, String token) {
+        Todo t = todosRepo.findById(id).orElseThrow();
+        User u = userRepo.findById(t.getUser_id()).orElseThrow();
+
+        if (!tokenService.validate(token).equals(u.getEmail())) return;
+
+        t.setStatus(data.status());
 
         todosRepo.save(t);
     }
