@@ -24,23 +24,47 @@ public class TodosService {
     @Autowired
     private UserRepo userRepo;
 
-    public Todo get(BigInteger id) {
+    public Todo get(BigInteger id, String token) {
+        Todo t = todosRepo.findById(id).orElseThrow();
+        User u = userRepo.findById(t.getUser_id()).orElseThrow();
+
+        if (!tokenService.validate(token).equals(u.getEmail())) return null;
+
         return todosRepo.findById(id).orElseThrow();
     }
 
-    public List<Todo> getAll(BigInteger user_id) {
+    public List<Todo> getAll(BigInteger user_id, String token) {
+        User u = userRepo.findById(user_id).orElseThrow();
+
+        if (!tokenService.validate(token).equals(u.getEmail())) return null;
+
         return todosRepo.getUserTodos(user_id);
     }
 
-    public List<Todo> getDone(BigInteger id) {
+    public List<Todo> getDone(BigInteger id, String token) {
+        Todo t = todosRepo.findById(id).orElseThrow();
+        User u = userRepo.findById(t.getUser_id()).orElseThrow();
+
+        if (!tokenService.validate(token).equals(u.getEmail())) return null;
+
         return todosRepo.getDone(id);
     }
 
-    public List<Todo> getProgress(BigInteger id) {
+    public List<Todo> getProgress(BigInteger id, String token) {
+        Todo t = todosRepo.findById(id).orElseThrow();
+        User u = userRepo.findById(t.getUser_id()).orElseThrow();
+
+        if (!tokenService.validate(token).equals(u.getEmail())) return null;
+
         return todosRepo.getInProgress(id);
     }
 
-    public List<Todo> getPending(BigInteger id) {
+    public List<Todo> getPending(BigInteger id, String token) {
+        Todo t = todosRepo.findById(id).orElseThrow();
+        User u = userRepo.findById(t.getUser_id()).orElseThrow();
+
+        if (!tokenService.validate(token).equals(u.getEmail())) return null;
+
         return todosRepo.getPending(id);
     }
 
@@ -76,7 +100,12 @@ public class TodosService {
         todosRepo.save(t);
     }
 
-    public void delete(BigInteger id) {
+    public void delete(BigInteger id, String token) {
+        Todo t = todosRepo.findById(id).orElseThrow();
+        User u = userRepo.findById(t.getUser_id()).orElseThrow();
+
+        if (!tokenService.validate(token).equals(u.getEmail())) return;
+
         todosRepo.deleteById(id);
     }
 }

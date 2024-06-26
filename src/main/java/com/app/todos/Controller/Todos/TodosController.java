@@ -24,32 +24,37 @@ public class TodosController {
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
     @GetMapping(value = "/get/{id}/")
-    public ResponseEntity<Todo> getSingle(@PathVariable BigInteger id) {
-        return ResponseEntity.ok(todosService.get(id));
+    public ResponseEntity<Todo> getSingle(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("authorization").replace("Bearer ", "");
+        return ResponseEntity.ok(todosService.get(id, token));
     }
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
     @GetMapping(value = "/all/{user_id}/")
-    public ResponseEntity<List<Todo>> all(@PathVariable BigInteger user_id) {
-        return ResponseEntity.ok(todosService.getAll(user_id));
+    public ResponseEntity<List<Todo>> all(@PathVariable BigInteger user_id, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("authorization").replace("Bearer ", "");
+        return ResponseEntity.ok(todosService.getAll(user_id, token));
     }
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
     @GetMapping(value = "/done/{user_id}/")
-    public ResponseEntity<List<Todo>> getDone(@PathVariable BigInteger user_id) {
-        return ResponseEntity.ok(todosService.getDone(user_id));
+    public ResponseEntity<List<Todo>> getDone(@PathVariable BigInteger user_id, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("authorization").replace("Bearer ", "");
+        return ResponseEntity.ok(todosService.getDone(user_id, token));
     }
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
     @GetMapping(value = "/progress/{user_id}/")
-    public ResponseEntity<List<Todo>> getProgress(@PathVariable BigInteger user_id) {
-        return ResponseEntity.ok(todosService.getProgress(user_id));
+    public ResponseEntity<List<Todo>> getProgress(@PathVariable BigInteger user_id, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("authorization").replace("Bearer ", "");
+        return ResponseEntity.ok(todosService.getProgress(user_id, token));
     }
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
     @GetMapping(value = "/pending/{user_id}/")
-    public ResponseEntity<List<Todo>> getPending(@PathVariable BigInteger user_id) {
-        return ResponseEntity.ok(todosService.getPending(user_id));
+    public ResponseEntity<List<Todo>> getPending(@PathVariable BigInteger user_id, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("authorization").replace("Bearer ", "");
+        return ResponseEntity.ok(todosService.getPending(user_id, token));
     }
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
@@ -77,8 +82,9 @@ public class TodosController {
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
     @DeleteMapping(value = "/delete/{id}/")
-    public ResponseEntity<String> delete(@PathVariable BigInteger id) {
-        todosService.delete(id);
+    public ResponseEntity<String> delete(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("authorization").replace("Bearer ", "");
+        todosService.delete(id, token);
         return ResponseEntity.accepted().build();
     }
 }

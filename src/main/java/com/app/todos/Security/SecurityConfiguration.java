@@ -35,10 +35,11 @@ public class SecurityConfiguration extends DelegatingWebMvcConfiguration {
         );
     }
 
+    /*
     @Override
     protected void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("htt://localhost:3030");
-    }
+        registry.addMapping("http://192.168.0.76:3030");
+    }*/
 }
 
 
