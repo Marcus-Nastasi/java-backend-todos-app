@@ -35,6 +35,24 @@ public class TodosController {
     }
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
+    @GetMapping(value = "/done/{user_id}/")
+    public ResponseEntity<List<Todo>> getDone(@PathVariable BigInteger user_id) {
+        return ResponseEntity.ok(todosService.getDone(user_id));
+    }
+
+    @CrossOrigin(value = "http://192.168.0.76:3030")
+    @GetMapping(value = "/progress/{user_id}/")
+    public ResponseEntity<List<Todo>> getProgress(@PathVariable BigInteger user_id) {
+        return ResponseEntity.ok(todosService.getProgress(user_id));
+    }
+
+    @CrossOrigin(value = "http://192.168.0.76:3030")
+    @GetMapping(value = "/pending/{user_id}/")
+    public ResponseEntity<List<Todo>> getPending(@PathVariable BigInteger user_id) {
+        return ResponseEntity.ok(todosService.getPending(user_id));
+    }
+
+    @CrossOrigin(value = "http://192.168.0.76:3030")
     @PostMapping(value = "/new/")
     public ResponseEntity<String> newTodo(@RequestBody @Validated NewTodoDTO data) {
         todosService.newTodo(data);

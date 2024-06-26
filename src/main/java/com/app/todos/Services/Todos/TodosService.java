@@ -28,6 +28,22 @@ public class TodosService {
         return todosRepo.findById(id).orElseThrow();
     }
 
+    public List<Todo> getAll(BigInteger user_id) {
+        return todosRepo.getUserTodos(user_id);
+    }
+
+    public List<Todo> getDone(BigInteger id) {
+        return todosRepo.getDone(id);
+    }
+
+    public List<Todo> getProgress(BigInteger id) {
+        return todosRepo.getInProgress(id);
+    }
+
+    public List<Todo> getPending(BigInteger id) {
+        return todosRepo.getPending(id);
+    }
+
     public void newTodo(NewTodoDTO data) {
         Todo t = new Todo(data.user_id(), data.client(), data.title(), data.description(), data.link(), data.due(), data.priority());
         todosRepo.save(t);
@@ -62,10 +78,6 @@ public class TodosService {
 
     public void delete(BigInteger id) {
         todosRepo.deleteById(id);
-    }
-
-    public List<Todo> getAll(BigInteger user_id) {
-        return todosRepo.getUserTodos(user_id);
     }
 }
 
