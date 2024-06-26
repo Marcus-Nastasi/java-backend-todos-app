@@ -42,8 +42,7 @@ public class TodosService {
     }
 
     public List<Todo> getDone(BigInteger id, String token) {
-        Todo t = todosRepo.findById(id).orElseThrow();
-        User u = userRepo.findById(t.getUser_id()).orElseThrow();
+        User u = userRepo.findById(id).orElseThrow();
 
         if (!tokenService.validate(token).equals(u.getEmail())) return null;
 
@@ -51,8 +50,7 @@ public class TodosService {
     }
 
     public List<Todo> getProgress(BigInteger id, String token) {
-        Todo t = todosRepo.findById(id).orElseThrow();
-        User u = userRepo.findById(t.getUser_id()).orElseThrow();
+        User u = userRepo.findById(id).orElseThrow();
 
         if (!tokenService.validate(token).equals(u.getEmail())) return null;
 
@@ -60,8 +58,7 @@ public class TodosService {
     }
 
     public List<Todo> getPending(BigInteger id, String token) {
-        Todo t = todosRepo.findById(id).orElseThrow();
-        User u = userRepo.findById(t.getUser_id()).orElseThrow();
+        User u = userRepo.findById(id).orElseThrow();
 
         if (!tokenService.validate(token).equals(u.getEmail())) return null;
 
