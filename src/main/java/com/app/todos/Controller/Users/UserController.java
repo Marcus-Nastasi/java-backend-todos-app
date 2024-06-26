@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/user")
@@ -21,8 +22,9 @@ public class UserController {
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
     @GetMapping(value = "/get/{id}/")
-    public ResponseEntity<User> get(@PathVariable BigInteger id) {
-        return ResponseEntity.ok(userService.get(id));
+    public ResponseEntity<User> get(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("authorization").replace("Bearer ", "");
+        return ResponseEntity.ok(userService.get(id, token));
     }
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
@@ -34,15 +36,17 @@ public class UserController {
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
     @PutMapping(value = "/update/{id}/")
-    public ResponseEntity<String> update(@RequestBody @Validated UpdateDTO data, @PathVariable BigInteger id) {
-        userService.update(id, data);
+    public ResponseEntity<String> update(@RequestBody @Validated UpdateDTO data, @PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("authorization").replace("Bearer ", "");
+        userService.update(id, data, token);
         return ResponseEntity.accepted().build();
     }
 
     @CrossOrigin(value = "http://192.168.0.76:3030")
     @DeleteMapping(value = "/delete/{id}/")
-    public ResponseEntity<String> del(@PathVariable BigInteger id) {
-        userService.delete(id);
+    public ResponseEntity<String> del(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
+        String token = headers.get("authorization").replace("Bearer ", "");
+        userService.delete(id, token);
         return ResponseEntity.accepted().build();
     }
 }
