@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/api/auth")
+@CrossOrigin(origins = {"http://todos.rolemberg.net.br:3030", "http://3.222.141.185:3030", "http://192.168.0.76:3030"})
 public class AuthController {
 
     @Autowired
@@ -26,7 +27,6 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @CrossOrigin(value = "http://192.168.0.76:3030")
     @PostMapping(value = "/login/")
     public ResponseEntity<String> login(@RequestBody @Valid LoginDTO data) {
         var auth = new UsernamePasswordAuthenticationToken(data.email(), data.password());
