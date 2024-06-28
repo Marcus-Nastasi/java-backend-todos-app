@@ -2,13 +2,10 @@ package com.app.todos.Services.Users;
 
 import com.app.todos.DTOs.Users.NewUserDTO;
 import com.app.todos.DTOs.Users.UpdateDTO;
-import com.app.todos.Models.Todos.Todo;
 import com.app.todos.Models.Users.User;
 import com.app.todos.Repository.User.UserRepo;
 import com.app.todos.Services.Auth.TokenService;
-import org.springframework.aop.target.LazyInitTargetSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
