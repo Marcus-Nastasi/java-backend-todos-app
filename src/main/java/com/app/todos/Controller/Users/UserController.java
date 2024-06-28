@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/user")
-@CrossOrigin(origins = {"http://todos.rolemberg.net.br:3030", "http://3.222.141.185:3030", "http://192.168.0.76:3030"})
+@CrossOrigin(origins = {"http://todos.rolemberg.net.br:3030", "http://todos.rolemberg.net.br", "http://3.222.141.185:3030", "http://192.168.0.76:3030"})
 public class UserController {
 
     @Autowired
