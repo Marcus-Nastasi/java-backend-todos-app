@@ -1,6 +1,7 @@
 package com.app.todos;
 
 import com.app.todos.DTOs.Users.NewUserDTO;
+import com.app.todos.DTOs.Users.UpdateDTO;
 import com.app.todos.Models.Users.User;
 import com.app.todos.Repository.User.UserRepo;
 import com.app.todos.Services.Auth.TokenService;
@@ -55,6 +56,35 @@ public class UserServiceTests {
 
         assertDoesNotThrow(() -> {
             userService.newUser(newUserDTO);
+        });
+    }
+
+    @Test
+    void update() {
+        User user = new User("Brian", "brian@gmail.com", "12345");
+        UpdateDTO updateDTO = new UpdateDTO("New Brian", "new email", "12345", "new pass");
+        String token = "token";
+
+        when(userRepo.save(any(User.class))).thenReturn(user);
+        when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
+        when(tokenService.validate(token)).thenReturn(user.getEmail());
+        when(passwordEncoder.matches(updateDTO.currentPassword(), user.getPassword())).thenReturn(true);
+
+        assertDoesNotThrow(() -> {
+            userService.update(BigInteger.valueOf(2500), updateDTO, token);
+        });
+    }
+
+    @Test
+    void deleteUser() {
+        User user = new User("Brian", "brian@gmail.com", "12345");
+        String token = "token";
+
+        when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
+        when(tokenService.validate(token)).thenReturn(user.getEmail());
+
+        assertDoesNotThrow(() -> {
+            userService.delete(BigInteger.valueOf(1005), token);
         });
     }
 }
