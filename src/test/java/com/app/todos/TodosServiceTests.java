@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,6 +63,33 @@ public class TodosServiceTests {
 
         assertThrows(JWTVerificationException.class, () -> {
             todosService.get(BigInteger.valueOf(1500), falseToken);
+        });
+    }
+
+    @Test
+    void getAll() {
+        Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
+        Todo todo2 = new Todo(BigInteger.valueOf(1600), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.LOW);
+        List<Todo> todos = new ArrayList<>();
+        todos.add(todo);
+        todos.add(todo2);
+        User user = new User("Brian", "bian@gmail.com", "12345");
+        String token = "Token";
+        String falseToken = "Token False";
+
+        when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
+        when(tokenService.validate(token)).thenReturn(user.getEmail());
+        when(todosRepo.getUserTodos(any(BigInteger.class))).thenReturn(todos);
+
+        assertEquals(todosService.getAll(BigInteger.valueOf(1500), token), todos);
+        assertDoesNotThrow(() -> {
+            todosService.getAll(BigInteger.valueOf(1500), token);
+        });
+
+        when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
+
+        assertThrows(JWTVerificationException.class, () -> {
+            todosService.getAll(BigInteger.valueOf(1500), falseToken);
         });
     }
 }
