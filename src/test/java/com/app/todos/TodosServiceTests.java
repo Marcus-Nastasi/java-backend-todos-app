@@ -1,6 +1,8 @@
 package com.app.todos;
 
 import com.app.todos.DTOs.Todos.NewTodoDTO;
+import com.app.todos.DTOs.Todos.UpdateTodoDTO;
+import com.app.todos.DTOs.Users.UpdateDTO;
 import com.app.todos.Enums.Todos.Priority;
 import com.app.todos.Enums.Todos.Status;
 import com.app.todos.Models.Todos.Todo;
@@ -194,6 +196,30 @@ public class TodosServiceTests {
 
         assertDoesNotThrow(() -> {
             todosService.newTodo(todoDTO);
+        });
+    }
+
+    @Test
+    void updateTodo() {
+        Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
+        UpdateTodoDTO todoDTO = new UpdateTodoDTO("Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
+        User user = new User("Brian", "bian@gmail.com", "12345");
+        String token = "Token";
+        String falseToken = "Token False";
+
+        when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
+        when(todosRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(todo));
+        when(tokenService.validate(token)).thenReturn(user.getEmail());
+        when(todosRepo.save(any(Todo.class))).thenReturn(todo);
+
+        assertDoesNotThrow(() -> {
+            todosService.update(BigInteger.valueOf(1500), todoDTO, token);
+        });
+
+        when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
+
+        assertThrows(JWTVerificationException.class, () -> {
+            todosService.update(BigInteger.valueOf(1500), todoDTO, falseToken);
         });
     }
 }
