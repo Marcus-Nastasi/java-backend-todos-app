@@ -1,6 +1,7 @@
 package com.app.todos;
 
 import com.app.todos.DTOs.Todos.NewTodoDTO;
+import com.app.todos.DTOs.Todos.UpdStatusDTO;
 import com.app.todos.DTOs.Todos.UpdateTodoDTO;
 import com.app.todos.DTOs.Users.UpdateDTO;
 import com.app.todos.Enums.Todos.Priority;
@@ -220,6 +221,52 @@ public class TodosServiceTests {
 
         assertThrows(JWTVerificationException.class, () -> {
             todosService.update(BigInteger.valueOf(1500), todoDTO, falseToken);
+        });
+    }
+
+    @Test
+    void updateStatus() {
+        Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
+        UpdStatusDTO statusDTO = new UpdStatusDTO(Status.DONE);
+        User user = new User("Brian", "bian@gmail.com", "12345");
+        User user2 = new User("Brian", "bianFalse@gmail.com", "12345");
+        String token = "Token";
+        String falseToken = "Token False";
+
+        when(todosRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(todo));
+        when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
+        when(tokenService.validate(token)).thenReturn(user.getEmail());
+        when(todosRepo.save(any(Todo.class))).thenReturn(todo);
+
+        assertDoesNotThrow(() -> {
+            todosService.updateStatus(BigInteger.valueOf(1500), statusDTO, token);
+        });
+
+        when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
+        assertThrows(JWTVerificationException.class, () -> {
+            todosService.updateStatus(BigInteger.valueOf(1000), statusDTO, falseToken);
+        });
+    }
+
+    @Test
+    void deleteTodo() {
+        Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
+        User user = new User("Brian", "bian@gmail.com", "12345");
+        String token = "Token";
+        String falseToken = "Token False";
+
+        when(todosRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(todo));
+        when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
+        when(tokenService.validate(token)).thenReturn(user.getEmail());
+
+        assertDoesNotThrow(() -> {
+            todosService.delete(BigInteger.valueOf(1500), token);
+        });
+
+        when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
+
+        assertThrows(JWTVerificationException.class, () -> {
+            todosService.delete(BigInteger.valueOf(1000), falseToken);
         });
     }
 }
