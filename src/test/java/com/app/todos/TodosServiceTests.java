@@ -1,5 +1,6 @@
 package com.app.todos;
 
+import com.app.todos.DTOs.Todos.NewTodoDTO;
 import com.app.todos.Enums.Todos.Priority;
 import com.app.todos.Enums.Todos.Status;
 import com.app.todos.Models.Todos.Todo;
@@ -181,6 +182,18 @@ public class TodosServiceTests {
 
         assertThrows(JWTVerificationException.class, () -> {
             todosService.getPending(BigInteger.valueOf(1500), falseToken);
+        });
+    }
+
+    @Test
+    void newTodo() {
+        Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
+        NewTodoDTO todoDTO = new NewTodoDTO(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
+
+        when(todosRepo.save(any(Todo.class))).thenReturn(todo);
+
+        assertDoesNotThrow(() -> {
+            todosService.newTodo(todoDTO);
         });
     }
 }
