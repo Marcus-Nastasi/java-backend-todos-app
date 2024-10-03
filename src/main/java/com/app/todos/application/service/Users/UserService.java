@@ -1,0 +1,52 @@
+package com.app.todos.application.service.Users;
+
+import com.app.todos.application.service.Auth.TokenService;
+import com.app.todos.domain.Users.DTOs.NewUserDTO;
+import com.app.todos.domain.Users.DTOs.UpdateDTO;
+import com.app.todos.domain.Users.User;
+import com.app.todos.resources.repository.User.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.math.BigInteger;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserRepo userRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenService tokenService;
+
+    public User get(BigInteger id, String token) {
+        User u = userRepo.findById(id).orElseThrow();
+        if (!tokenService.validate(token).equals(u.getEmail())) return null;
+        return userRepo.findById(id).orElseThrow();
+    }
+
+    public void newUser(NewUserDTO data) {
+        String encoded = passwordEncoder.encode(data.password());
+        User u = new User(data.name(), data.email(), encoded);
+        userRepo.save(u);
+    }
+
+    public void update(BigInteger id, UpdateDTO data, String token) {
+        User u = userRepo.findById(id).orElseThrow();
+        if (!tokenService.validate(token).equals(u.getEmail())) return;
+        if (!passwordEncoder.matches(data.currentPassword(), u.getPassword())) return;
+        String encoded = passwordEncoder.encode(data.newPassword());
+        u.setName(data.name());
+        u.setEmail(data.email());
+        u.setPassword(encoded);
+        userRepo.save(u);
+    }
+
+    public void delete(BigInteger id, String token) {
+        User u = userRepo.findById(id).orElseThrow();
+        if (!tokenService.validate(token).equals(u.getEmail())) return;
+        userRepo.deleteById(id);
+    }
+}
