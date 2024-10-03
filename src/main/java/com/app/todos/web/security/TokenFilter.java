@@ -24,18 +24,18 @@ public class TokenFilter extends OncePerRequestFilter {
     private UserRepo userRepo;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
         String token = recover(request);
-
         if (token != null) {
             String email = tokenService.validate(token);
             UserDetails u = userRepo.findByEmail(email);
-
             var auth = new UsernamePasswordAuthenticationToken(u, null, u.getAuthorities());
-
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -45,9 +45,3 @@ public class TokenFilter extends OncePerRequestFilter {
         return headers.replace("Bearer ", "");
     }
 }
-
-
-
-
-
-

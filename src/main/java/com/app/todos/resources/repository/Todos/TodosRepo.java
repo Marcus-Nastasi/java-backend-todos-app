@@ -21,7 +21,3 @@ public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
     @Query(nativeQuery = true, value = "SELECT * FROM todos WHERE(user_id=?1 AND status=2);")
     List<Todo> getDone(BigInteger id);
 }
-
-
-
-

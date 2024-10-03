@@ -26,7 +26,11 @@ public class SecurityConfiguration extends DelegatingWebMvcConfiguration {
             httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
-                    http -> http.requestMatchers(HttpMethod.POST, "/api/auth/login/").permitAll()
+                    http -> http
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login/").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/user/new/").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -38,12 +42,9 @@ public class SecurityConfiguration extends DelegatingWebMvcConfiguration {
     @Override
     protected void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("https://todos.rolemberg.net.br, http://todos.rolemberg.net.br, http://192.168.0.76:3030", "http://localhost:3030")
+            .allowedOrigins("http://192.168.0.76:3030", "http://localhost:3030")
             .allowedMethods("GET", "POST", "PUT", "DELETE")
             .allowedHeaders("Content-Type", "Authorization")
             .allowCredentials(true);
     }
 }
-
-
-

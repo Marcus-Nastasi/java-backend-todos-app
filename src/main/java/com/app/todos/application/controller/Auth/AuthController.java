@@ -29,8 +29,10 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping(value = "/login/")
-    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginDTO data) {
+    @PostMapping(value = "/login")
+    public ResponseEntity<Map<String, String>> login(
+            @RequestBody @Valid LoginDTO data
+    ) {
         var auth = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         authenticationManager.authenticate(auth);
         UserDetails u = userRepo.findByEmail(data.email());

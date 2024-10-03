@@ -10,5 +10,3 @@ public class TodosApplication {
 		SpringApplication.run(TodosApplication.class, args);
 	}
 }
-
-

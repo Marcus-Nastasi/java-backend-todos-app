@@ -18,6 +18,3 @@ public class SecurityService implements UserDetailsService {
         return userRepo.findByEmail(username);
     }
 }
-
-
-

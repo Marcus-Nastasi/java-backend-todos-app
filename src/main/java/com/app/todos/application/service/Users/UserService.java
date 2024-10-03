@@ -27,26 +27,29 @@ public class UserService {
         return userRepo.findById(id).orElseThrow();
     }
 
-    public void newUser(NewUserDTO data) {
+    public User newUser(NewUserDTO data) {
         String encoded = passwordEncoder.encode(data.password());
         User u = new User(data.name(), data.email(), encoded);
         userRepo.save(u);
+        return u;
     }
 
-    public void update(BigInteger id, UpdateDTO data, String token) {
+    public User update(BigInteger id, UpdateDTO data, String token) {
         User u = userRepo.findById(id).orElseThrow();
-        if (!tokenService.validate(token).equals(u.getEmail())) return;
-        if (!passwordEncoder.matches(data.currentPassword(), u.getPassword())) return;
+        if (!tokenService.validate(token).equals(u.getEmail())) return null;
+        if (!passwordEncoder.matches(data.currentPassword(), u.getPassword())) return null;
         String encoded = passwordEncoder.encode(data.newPassword());
         u.setName(data.name());
         u.setEmail(data.email());
         u.setPassword(encoded);
         userRepo.save(u);
+        return u;
     }
 
-    public void delete(BigInteger id, String token) {
+    public User delete(BigInteger id, String token) {
         User u = userRepo.findById(id).orElseThrow();
-        if (!tokenService.validate(token).equals(u.getEmail())) return;
+        if (!tokenService.validate(token).equals(u.getEmail())) return null;
         userRepo.deleteById(id);
+        return u;
     }
 }

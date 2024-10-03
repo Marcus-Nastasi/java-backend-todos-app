@@ -23,7 +23,7 @@ public class TodosController {
     @Autowired
     private TodosService todosService;
 
-    @GetMapping(value = "/get/{id}/")
+    @GetMapping(value = "/get/{id}")
     public ResponseEntity<Todo> getSingle(
             @PathVariable BigInteger id,
             @RequestHeader Map<String, String> headers
@@ -32,7 +32,7 @@ public class TodosController {
         return ResponseEntity.ok(todosService.get(id, token));
     }
 
-    @GetMapping(value = "/all/{user_id}/")
+    @GetMapping(value = "/all/{user_id}")
     public ResponseEntity<List<Todo>> all(
             @PathVariable BigInteger user_id,
             @RequestHeader Map<String, String> headers
@@ -41,7 +41,7 @@ public class TodosController {
         return ResponseEntity.ok(todosService.getAll(user_id, token));
     }
 
-    @GetMapping(value = "/done/{user_id}/")
+    @GetMapping(value = "/done/{user_id}")
     public ResponseEntity<List<Todo>> getDone(
             @PathVariable BigInteger user_id,
             @RequestHeader Map<String, String> headers
@@ -50,7 +50,7 @@ public class TodosController {
         return ResponseEntity.ok(todosService.getDone(user_id, token));
     }
 
-    @GetMapping(value = "/progress/{user_id}/")
+    @GetMapping(value = "/progress/{user_id}")
     public ResponseEntity<List<Todo>> getProgress(
             @PathVariable BigInteger user_id,
             @RequestHeader Map<String, String> headers
@@ -59,7 +59,7 @@ public class TodosController {
         return ResponseEntity.ok(todosService.getProgress(user_id, token));
     }
 
-    @GetMapping(value = "/pending/{user_id}/")
+    @GetMapping(value = "/pending/{user_id}")
     public ResponseEntity<List<Todo>> getPending(
             @PathVariable BigInteger user_id,
             @RequestHeader Map<String, String> headers
@@ -68,13 +68,13 @@ public class TodosController {
         return ResponseEntity.ok(todosService.getPending(user_id, token));
     }
 
-    @PostMapping(value = "/new/")
+    @PostMapping(value = "/new")
     public ResponseEntity<String> newTodo(@RequestBody @Validated NewTodoDTO data) {
         todosService.newTodo(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping(value = "/update/{id}/")
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<String> update(
             @PathVariable BigInteger id,
             @RequestBody @Validated UpdateTodoDTO data,
@@ -85,7 +85,7 @@ public class TodosController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping(value = "/update/status/{id}/")
+    @PutMapping(value = "/update/status/{id}")
     public ResponseEntity<String> updateStatus(
             @PathVariable BigInteger id,
             @RequestBody UpdStatusDTO data,
@@ -96,7 +96,7 @@ public class TodosController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping(value = "/delete/{id}/")
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<String> delete(
             @PathVariable BigInteger id,
             @RequestHeader Map<String, String> headers
