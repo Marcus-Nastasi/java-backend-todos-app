@@ -9,6 +9,8 @@ import com.app.todos.resources.repository.Todos.TodosRepo;
 import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.application.service.Auth.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -31,10 +33,11 @@ public class TodosService {
         return todosRepo.findById(id).orElseThrow();
     }
 
-    public List<Todo> getAll(BigInteger user_id, String token) {
+    public List<Todo> getAll(BigInteger user_id, String token, int page, int size) {
         User u = userRepo.findById(user_id).orElseThrow();
         if (!tokenService.validate(token).equals(u.getEmail())) return null;
-        return todosRepo.getUserTodos(user_id);
+        Page<Todo> todoPage = todosRepo.getUserTodos(user_id, PageRequest.of(page, size));
+        return todoPage.toList();
     }
 
     public List<Todo> getDone(BigInteger id, String token) {

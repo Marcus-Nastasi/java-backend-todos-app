@@ -19,6 +19,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigInteger;
@@ -37,13 +40,9 @@ public class TodosServiceTests {
     @Mock
     private TodosRepo todosRepo;
     @Mock
-    private UserService userService;
-    @Mock
     private UserRepo userRepo;
     @Mock
     private TokenService tokenService;
-    @Mock
-    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private TodosService todosService;
 
@@ -72,28 +71,29 @@ public class TodosServiceTests {
 
     @Test
     void getAll() {
-        Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
-        Todo todo2 = new Todo(BigInteger.valueOf(1600), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.LOW);
+        Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 7, 15), Priority.HIGH);
+        Todo todo2 = new Todo(BigInteger.valueOf(1600), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 7, 15), Priority.LOW);
         List<Todo> todos = new ArrayList<>();
         todos.add(todo);
         todos.add(todo2);
+        Page<Todo> todoPage = new PageImpl<>(todos);
         User user = new User("Brian", "bian@gmail.com", "12345");
         String token = "Token";
         String falseToken = "Token False";
 
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
-        when(todosRepo.getUserTodos(any(BigInteger.class))).thenReturn(todos);
+        when(todosRepo.getUserTodos(any(BigInteger.class), any(Pageable.class))).thenReturn(todoPage);
 
-        assertEquals(todosService.getAll(BigInteger.valueOf(1500), token), todos);
+        assertEquals(todosService.getAll(BigInteger.valueOf(1500), token, 0, 10), todos);
         assertDoesNotThrow(() -> {
-            todosService.getAll(BigInteger.valueOf(1500), token);
+            todosService.getAll(BigInteger.valueOf(1500), token, 0, 10);
         });
 
         when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
 
         assertThrows(JWTVerificationException.class, () -> {
-            todosService.getAll(BigInteger.valueOf(1500), falseToken);
+            todosService.getAll(BigInteger.valueOf(1500), falseToken, 0, 10);
         });
     }
 

@@ -5,7 +5,9 @@ import com.app.todos.domain.Todos.DTOs.TodosStatusDTO;
 import com.app.todos.domain.Todos.DTOs.TodosUpdateDTO;
 import com.app.todos.domain.Todos.Todo;
 import com.app.todos.application.service.Todos.TodosService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/todos")
 @CrossOrigin(origins = {"http://192.168.0.76:3030", "http://localhost:3030"})
+@SecurityRequirement(name = "Bearer Authentication")
 public class TodosController {
 
     @Autowired
@@ -34,11 +37,13 @@ public class TodosController {
 
     @GetMapping(value = "/all/{user_id}")
     public ResponseEntity<List<Todo>> all(
+            @RequestParam("page") @DefaultValue("0") int page,
+            @RequestParam("size") @DefaultValue("10") int size,
             @PathVariable BigInteger user_id,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        return ResponseEntity.ok(todosService.getAll(user_id, token));
+        return ResponseEntity.ok(todosService.getAll(user_id, token, page, size));
     }
 
     @GetMapping(value = "/done/{user_id}")
@@ -68,7 +73,7 @@ public class TodosController {
         return ResponseEntity.ok(todosService.getPending(user_id, token));
     }
 
-    @PostMapping(value = "/new")
+    @PostMapping(value = "/register")
     public ResponseEntity<String> newTodo(@RequestBody @Validated TodosRequestDTO data) {
         todosService.newTodo(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();

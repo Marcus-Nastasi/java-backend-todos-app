@@ -4,6 +4,7 @@ import com.app.todos.domain.Users.DTOs.UserRequestDTO;
 import com.app.todos.domain.Users.DTOs.UserUpdateDTO;
 import com.app.todos.domain.Users.User;
 import com.app.todos.application.service.Users.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/api/user")
 @CrossOrigin(origins = {"http://192.168.0.76:3030", "http://localhost:3030"})
+@SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
 
     @Autowired
@@ -30,7 +32,7 @@ public class UserController {
         return ResponseEntity.ok(userService.get(id, token));
     }
 
-    @PostMapping(value = "/new")
+    @PostMapping(value = "/register")
     public ResponseEntity<User> newUser(
             @RequestBody @Validated UserRequestDTO data
     ) {
