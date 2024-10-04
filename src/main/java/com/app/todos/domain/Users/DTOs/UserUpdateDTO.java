@@ -1,7 +1,8 @@
 package com.app.todos.domain.Users.DTOs;
 
-public record NewUserDTO(
+public record UserUpdateDTO(
         String name,
         String email,
-        String password
+        String currentPassword,
+        String newPassword
 ) {}

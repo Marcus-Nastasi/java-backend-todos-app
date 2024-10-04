@@ -1,6 +1,6 @@
 package com.app.todos.application.controller.Auth;
 
-import com.app.todos.domain.Auth.DTOs.LoginDTO;
+import com.app.todos.domain.Auth.DTOs.AuthRequestDTO;
 import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.application.service.Auth.TokenService;
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ public class AuthController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<Map<String, String>> login(
-            @RequestBody @Valid LoginDTO data
+            @RequestBody @Valid AuthRequestDTO data
     ) {
         var auth = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         authenticationManager.authenticate(auth);

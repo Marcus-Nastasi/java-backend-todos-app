@@ -5,7 +5,7 @@ import com.app.todos.resources.enums.todos.Priority;
 import java.math.BigInteger;
 import java.time.LocalDate;
 
-public record NewTodoDTO(
+public record TodosRequestDTO(
         BigInteger user_id,
         String title,
         String client,

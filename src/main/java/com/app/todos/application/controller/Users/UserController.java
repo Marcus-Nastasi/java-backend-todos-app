@@ -1,7 +1,7 @@
 package com.app.todos.application.controller.Users;
 
-import com.app.todos.domain.Users.DTOs.NewUserDTO;
-import com.app.todos.domain.Users.DTOs.UpdateDTO;
+import com.app.todos.domain.Users.DTOs.UserRequestDTO;
+import com.app.todos.domain.Users.DTOs.UserUpdateDTO;
 import com.app.todos.domain.Users.User;
 import com.app.todos.application.service.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping(value = "/new")
     public ResponseEntity<User> newUser(
-            @RequestBody @Validated NewUserDTO data
+            @RequestBody @Validated UserRequestDTO data
     ) {
         User u = userService.newUser(data);
         return ResponseEntity.status(HttpStatus.CREATED).body(u);
@@ -40,7 +40,7 @@ public class UserController {
 
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<User> update(
-            @RequestBody @Validated UpdateDTO data,
+            @RequestBody @Validated UserUpdateDTO data,
             @PathVariable BigInteger id,
             @RequestHeader Map<String, String> headers
     ) {

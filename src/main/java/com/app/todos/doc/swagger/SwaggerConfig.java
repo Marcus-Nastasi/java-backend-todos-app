@@ -1,4 +1,4 @@
-package com.app.todos.config.swagger;
+package com.app.todos.doc.swagger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

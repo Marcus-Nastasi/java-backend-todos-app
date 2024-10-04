@@ -1,8 +1,8 @@
 package com.app.todos.application.service.Todos;
 
-import com.app.todos.domain.Todos.DTOs.NewTodoDTO;
-import com.app.todos.domain.Todos.DTOs.UpdStatusDTO;
-import com.app.todos.domain.Todos.DTOs.UpdateTodoDTO;
+import com.app.todos.domain.Todos.DTOs.TodosRequestDTO;
+import com.app.todos.domain.Todos.DTOs.TodosStatusDTO;
+import com.app.todos.domain.Todos.DTOs.TodosUpdateDTO;
 import com.app.todos.domain.Todos.Todo;
 import com.app.todos.domain.Users.User;
 import com.app.todos.resources.repository.Todos.TodosRepo;
@@ -55,14 +55,14 @@ public class TodosService {
         return todosRepo.getPending(id);
     }
 
-    public void newTodo(NewTodoDTO data) {
+    public void newTodo(TodosRequestDTO data) {
         Todo t = new Todo(
             data.user_id(), data.client(), data.title(), data.description(), data.link(), data.due(), data.priority()
         );
         todosRepo.save(t);
     }
 
-    public void update(BigInteger id, UpdateTodoDTO data, String token) {
+    public void update(BigInteger id, TodosUpdateDTO data, String token) {
         Todo t = todosRepo.findById(id).orElseThrow();
         User u = userRepo.findById(t.getUser_id()).orElseThrow();
         if (!tokenService.validate(token).equals(u.getEmail())) return;
@@ -75,7 +75,7 @@ public class TodosService {
         todosRepo.save(t);
     }
 
-    public void updateStatus(BigInteger id, UpdStatusDTO data, String token) {
+    public void updateStatus(BigInteger id, TodosStatusDTO data, String token) {
         Todo t = todosRepo.findById(id).orElseThrow();
         User u = userRepo.findById(t.getUser_id()).orElseThrow();
         if (!tokenService.validate(token).equals(u.getEmail())) return;

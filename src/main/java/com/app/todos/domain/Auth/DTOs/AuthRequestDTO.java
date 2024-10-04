@@ -1,6 +1,6 @@
 package com.app.todos.domain.Auth.DTOs;
 
-public record LoginDTO(
+public record AuthRequestDTO(
     String email,
     String password
 ) {}

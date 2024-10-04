@@ -1,8 +1,8 @@
 package com.app.todos.application.service.Users;
 
 import com.app.todos.application.service.Auth.TokenService;
-import com.app.todos.domain.Users.DTOs.NewUserDTO;
-import com.app.todos.domain.Users.DTOs.UpdateDTO;
+import com.app.todos.domain.Users.DTOs.UserRequestDTO;
+import com.app.todos.domain.Users.DTOs.UserUpdateDTO;
 import com.app.todos.domain.Users.User;
 import com.app.todos.resources.repository.User.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +27,14 @@ public class UserService {
         return userRepo.findById(id).orElseThrow();
     }
 
-    public User newUser(NewUserDTO data) {
+    public User newUser(UserRequestDTO data) {
         String encoded = passwordEncoder.encode(data.password());
         User u = new User(data.name(), data.email(), encoded);
         userRepo.save(u);
         return u;
     }
 
-    public User update(BigInteger id, UpdateDTO data, String token) {
+    public User update(BigInteger id, UserUpdateDTO data, String token) {
         User u = userRepo.findById(id).orElseThrow();
         if (!tokenService.validate(token).equals(u.getEmail())) return null;
         if (!passwordEncoder.matches(data.currentPassword(), u.getPassword())) return null;

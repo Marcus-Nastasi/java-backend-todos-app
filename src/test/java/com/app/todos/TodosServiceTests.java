@@ -1,8 +1,8 @@
 package com.app.todos;
 
-import com.app.todos.domain.Todos.DTOs.NewTodoDTO;
-import com.app.todos.domain.Todos.DTOs.UpdStatusDTO;
-import com.app.todos.domain.Todos.DTOs.UpdateTodoDTO;
+import com.app.todos.domain.Todos.DTOs.TodosRequestDTO;
+import com.app.todos.domain.Todos.DTOs.TodosStatusDTO;
+import com.app.todos.domain.Todos.DTOs.TodosUpdateDTO;
 import com.app.todos.resources.enums.todos.Priority;
 import com.app.todos.resources.enums.todos.Status;
 import com.app.todos.domain.Todos.Todo;
@@ -190,7 +190,7 @@ public class TodosServiceTests {
     @Test
     void newTodo() {
         Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
-        NewTodoDTO todoDTO = new NewTodoDTO(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
+        TodosRequestDTO todoDTO = new TodosRequestDTO(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
 
         when(todosRepo.save(any(Todo.class))).thenReturn(todo);
 
@@ -202,7 +202,7 @@ public class TodosServiceTests {
     @Test
     void updateTodo() {
         Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
-        UpdateTodoDTO todoDTO = new UpdateTodoDTO("Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
+        TodosUpdateDTO todoDTO = new TodosUpdateDTO("Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
         User user = new User("Brian", "bian@gmail.com", "12345");
         String token = "Token";
         String falseToken = "Token False";
@@ -226,7 +226,7 @@ public class TodosServiceTests {
     @Test
     void updateStatus() {
         Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 07, 15), Priority.HIGH);
-        UpdStatusDTO statusDTO = new UpdStatusDTO(Status.DONE);
+        TodosStatusDTO statusDTO = new TodosStatusDTO(Status.DONE);
         User user = new User("Brian", "bian@gmail.com", "12345");
         User user2 = new User("Brian", "bianFalse@gmail.com", "12345");
         String token = "Token";

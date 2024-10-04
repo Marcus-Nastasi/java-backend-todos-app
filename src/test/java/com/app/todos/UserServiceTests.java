@@ -1,7 +1,7 @@
 package com.app.todos;
 
-import com.app.todos.domain.Users.DTOs.NewUserDTO;
-import com.app.todos.domain.Users.DTOs.UpdateDTO;
+import com.app.todos.domain.Users.DTOs.UserRequestDTO;
+import com.app.todos.domain.Users.DTOs.UserUpdateDTO;
 import com.app.todos.domain.Users.User;
 import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.application.service.Auth.TokenService;
@@ -50,28 +50,28 @@ public class UserServiceTests {
     @Test
     void newUserTest() {
         User user = new User("Brian", "brian@gmail.com", "12345");
-        NewUserDTO newUserDTO = new NewUserDTO("Brian", "brian@gmail.com", "12345");
+        UserRequestDTO userRequestDTO = new UserRequestDTO("Brian", "brian@gmail.com", "12345");
 
         when(userRepo.save(any(User.class))).thenReturn(user);
 
         assertDoesNotThrow(() -> {
-            userService.newUser(newUserDTO);
+            userService.newUser(userRequestDTO);
         });
     }
 
     @Test
     void update() {
         User user = new User("Brian", "brian@gmail.com", "12345");
-        UpdateDTO updateDTO = new UpdateDTO("New Brian", "new email", "12345", "new pass");
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO("New Brian", "new email", "12345", "new pass");
         String token = "token";
 
         when(userRepo.save(any(User.class))).thenReturn(user);
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
-        when(passwordEncoder.matches(updateDTO.currentPassword(), user.getPassword())).thenReturn(true);
+        when(passwordEncoder.matches(userUpdateDTO.currentPassword(), user.getPassword())).thenReturn(true);
 
         assertDoesNotThrow(() -> {
-            userService.update(BigInteger.valueOf(2500), updateDTO, token);
+            userService.update(BigInteger.valueOf(2500), userUpdateDTO, token);
         });
     }
 

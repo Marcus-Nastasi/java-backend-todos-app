@@ -4,7 +4,7 @@ import com.app.todos.resources.enums.todos.Priority;
 
 import java.time.LocalDate;
 
-public record UpdateTodoDTO(
+public record TodosUpdateDTO(
         String title,
         String client,
         String description,

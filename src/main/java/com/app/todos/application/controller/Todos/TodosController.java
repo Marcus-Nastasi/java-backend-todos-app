@@ -1,8 +1,8 @@
 package com.app.todos.application.controller.Todos;
 
-import com.app.todos.domain.Todos.DTOs.NewTodoDTO;
-import com.app.todos.domain.Todos.DTOs.UpdStatusDTO;
-import com.app.todos.domain.Todos.DTOs.UpdateTodoDTO;
+import com.app.todos.domain.Todos.DTOs.TodosRequestDTO;
+import com.app.todos.domain.Todos.DTOs.TodosStatusDTO;
+import com.app.todos.domain.Todos.DTOs.TodosUpdateDTO;
 import com.app.todos.domain.Todos.Todo;
 import com.app.todos.application.service.Todos.TodosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +69,7 @@ public class TodosController {
     }
 
     @PostMapping(value = "/new")
-    public ResponseEntity<String> newTodo(@RequestBody @Validated NewTodoDTO data) {
+    public ResponseEntity<String> newTodo(@RequestBody @Validated TodosRequestDTO data) {
         todosService.newTodo(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -77,7 +77,7 @@ public class TodosController {
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<String> update(
             @PathVariable BigInteger id,
-            @RequestBody @Validated UpdateTodoDTO data,
+            @RequestBody @Validated TodosUpdateDTO data,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
@@ -88,7 +88,7 @@ public class TodosController {
     @PutMapping(value = "/update/status/{id}")
     public ResponseEntity<String> updateStatus(
             @PathVariable BigInteger id,
-            @RequestBody UpdStatusDTO data,
+            @RequestBody TodosStatusDTO data,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
