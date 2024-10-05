@@ -1,6 +1,7 @@
 package com.app.todos.application.controller.Auth;
 
 import com.app.todos.domain.Auth.DTOs.AuthRequestDTO;
+import com.app.todos.domain.Auth.DTOs.AuthResponseDTO;
 import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.application.service.Auth.TokenService;
 import jakarta.validation.Valid;
@@ -30,16 +31,15 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping(value = "/login")
-    public ResponseEntity<Map<String, String>> login(
+    public ResponseEntity<AuthResponseDTO> login(
             @RequestBody @Valid AuthRequestDTO data
     ) {
         var auth = new UsernamePasswordAuthenticationToken(data.email(), data.password());
         authenticationManager.authenticate(auth);
         UserDetails u = userRepo.findByEmail(data.email());
-        Map<String, String> res = Map.of("token", tokenService.generate(u.getUsername()));
-        return(
-            passwordEncoder.matches(data.password(), u.getPassword()) ?
-            ResponseEntity.accepted().body(res) : ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        );
+        AuthResponseDTO authResponseDTO = new AuthResponseDTO(tokenService.generate(u.getUsername()), u);
+        return passwordEncoder.matches(data.password(), u.getPassword())
+            ? ResponseEntity.accepted().body(authResponseDTO)
+            : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 }

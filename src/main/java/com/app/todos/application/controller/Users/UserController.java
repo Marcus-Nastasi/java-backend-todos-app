@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(u);
     }
 
-    @PutMapping(value = "/update/{id}")
+    @PatchMapping(value = "/update/{id}")
     public ResponseEntity<User> update(
             @RequestBody @Validated UserUpdateDTO data,
             @PathVariable BigInteger id,

@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,8 @@ public class TodosController {
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        return ResponseEntity.ok(todosService.get(id, token));
+        Todo todo = todosService.get(id, token);
+        return ResponseEntity.ok(todo);
     }
 
     @GetMapping(value = "/all/{user_id}")
@@ -43,7 +45,8 @@ public class TodosController {
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        return ResponseEntity.ok(todosService.getAll(user_id, token, page, size));
+        List<Todo> todoList = todosService.getAll(user_id, token, page, size);
+        return ResponseEntity.ok(todoList);
     }
 
     @GetMapping(value = "/done/{user_id}")
@@ -52,7 +55,8 @@ public class TodosController {
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        return ResponseEntity.ok(todosService.getDone(user_id, token));
+        List<Todo> todoList = todosService.getDone(user_id, token);
+        return ResponseEntity.ok(todoList);
     }
 
     @GetMapping(value = "/progress/{user_id}")
@@ -61,7 +65,8 @@ public class TodosController {
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        return ResponseEntity.ok(todosService.getProgress(user_id, token));
+        List<Todo> todoList = todosService.getProgress(user_id, token);
+        return ResponseEntity.ok(todoList);
     }
 
     @GetMapping(value = "/pending/{user_id}")
@@ -70,44 +75,49 @@ public class TodosController {
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        return ResponseEntity.ok(todosService.getPending(user_id, token));
+        List<Todo> todoList = todosService.getPending(user_id, token);
+        return ResponseEntity.ok(todoList);
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<String> newTodo(@RequestBody @Validated TodosRequestDTO data) {
-        todosService.newTodo(data);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<Todo> newTodo(
+            @RequestBody @Validated TodosRequestDTO data
+    ) {
+        Todo todo = todosService.newTodo(data);
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(todo);
     }
 
-    @PutMapping(value = "/update/{id}")
-    public ResponseEntity<String> update(
+    @PatchMapping(value = "/update/{id}")
+    public ResponseEntity<Todo> update(
             @PathVariable BigInteger id,
             @RequestBody @Validated TodosUpdateDTO data,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        todosService.update(id, data, token);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        Todo todo = todosService.update(id, data, token);
+        return ResponseEntity.ok(todo);
     }
 
-    @PutMapping(value = "/update/status/{id}")
-    public ResponseEntity<String> updateStatus(
+    @PatchMapping(value = "/update/status/{id}")
+    public ResponseEntity<Todo> updateStatus(
             @PathVariable BigInteger id,
             @RequestBody TodosStatusDTO data,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        todosService.updateStatus(id, data, token);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        Todo todo = todosService.updateStatus(id, data, token);
+        return ResponseEntity.ok(todo);
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<String> delete(
+    public ResponseEntity<Todo> delete(
             @PathVariable BigInteger id,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        todosService.delete(id, token);
-        return ResponseEntity.accepted().build();
+        Todo todo = todosService.delete(id, token);
+        return ResponseEntity.ok(todo);
     }
 }
