@@ -20,7 +20,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/todos")
-@CrossOrigin(origins = {"http://192.168.0.76:3030", "http://localhost:3030"})
 @SecurityRequirement(name = "Bearer Authentication")
 public class TodosController {
 

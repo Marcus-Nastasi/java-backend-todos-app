@@ -42,7 +42,7 @@ public class SecurityConfiguration extends DelegatingWebMvcConfiguration {
     @Override
     protected void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowedOrigins("http://192.168.0.76:3030", "http://localhost:3030")
+            .allowedOrigins("http://192.168.0.76:3000", "http://localhost:3000")
             .allowedMethods("GET", "POST", "PUT", "DELETE")
             .allowedHeaders("Content-Type", "Authorization")
             .allowCredentials(true);

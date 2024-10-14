@@ -18,7 +18,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/auth")
-@CrossOrigin(origins = {"http://192.168.0.76:3030", "http://localhost:3030"})
 public class AuthController {
 
     @Autowired
@@ -39,7 +38,7 @@ public class AuthController {
         UserDetails u = userRepo.findByEmail(data.email());
         AuthResponseDTO authResponseDTO = new AuthResponseDTO(tokenService.generate(u.getUsername()), u);
         return passwordEncoder.matches(data.password(), u.getPassword())
-            ? ResponseEntity.accepted().body(authResponseDTO)
+            ? ResponseEntity.ok(authResponseDTO)
             : ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 }
