@@ -1,7 +1,7 @@
 package com.app.todos.web.security;
 
 import com.app.todos.resources.repository.User.UserRepo;
-import com.app.todos.application.service.Auth.TokenService;
+import com.app.todos.application.service.auth.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

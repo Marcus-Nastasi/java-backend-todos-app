@@ -1,11 +1,11 @@
 package com.app.todos;
 
-import com.app.todos.domain.Users.DTOs.UserRequestDTO;
-import com.app.todos.domain.Users.DTOs.UserUpdateDTO;
-import com.app.todos.domain.Users.User;
+import com.app.todos.domain.users.DTOs.UserRequestDTO;
+import com.app.todos.domain.users.DTOs.UserUpdateDTO;
+import com.app.todos.domain.users.User;
 import com.app.todos.resources.repository.User.UserRepo;
-import com.app.todos.application.service.Auth.TokenService;
-import com.app.todos.application.service.Users.UserService;
+import com.app.todos.application.service.auth.TokenService;
+import com.app.todos.application.service.users.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

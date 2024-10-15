@@ -1,17 +1,16 @@
 package com.app.todos;
 
-import com.app.todos.domain.Todos.DTOs.TodosRequestDTO;
-import com.app.todos.domain.Todos.DTOs.TodosStatusDTO;
-import com.app.todos.domain.Todos.DTOs.TodosUpdateDTO;
+import com.app.todos.domain.todos.DTOs.TodosRequestDTO;
+import com.app.todos.domain.todos.DTOs.TodosStatusDTO;
+import com.app.todos.domain.todos.DTOs.TodosUpdateDTO;
 import com.app.todos.resources.enums.todos.Priority;
 import com.app.todos.resources.enums.todos.Status;
-import com.app.todos.domain.Todos.Todo;
-import com.app.todos.domain.Users.User;
+import com.app.todos.domain.todos.Todo;
+import com.app.todos.domain.users.User;
 import com.app.todos.resources.repository.Todos.TodosRepo;
 import com.app.todos.resources.repository.User.UserRepo;
-import com.app.todos.application.service.Auth.TokenService;
-import com.app.todos.application.service.Todos.TodosService;
-import com.app.todos.application.service.Users.UserService;
+import com.app.todos.application.service.auth.TokenService;
+import com.app.todos.application.service.todos.TodosService;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -269,6 +267,3 @@ public class TodosServiceTests {
         });
     }
 }
-
-
-

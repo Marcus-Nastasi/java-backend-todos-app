@@ -1,6 +1,6 @@
 package com.app.todos.resources.repository.User;
 
-import com.app.todos.domain.Users.User;
+import com.app.todos.domain.users.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UserDetails;
