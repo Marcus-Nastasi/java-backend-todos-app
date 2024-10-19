@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.List;
 
 @Service
 public class TodosService {
@@ -44,6 +43,7 @@ public class TodosService {
     public TodosPageResponseDto getAll(
             BigInteger user_id,
             String token,
+            //String status,
             int page,
             int size
     ) {
@@ -61,31 +61,49 @@ public class TodosService {
         );
     }
 
-    public List<Todo> getDone(BigInteger id, String token) {
+    public TodosPageResponseDto getDone(BigInteger id, String token, int page, int size) {
         User u = userRepo
             .findById(id)
             .orElseThrow(() -> new AppException("User not found"));
         if (!tokenService.validate(token).equals(u.getEmail()))
             throw new ForbiddenException("Invalid token");
-        return todosRepo.getDone(id);
+        Page<Todo> todoPage = todosRepo.getDone(id, PageRequest.of(page, size));
+        return new TodosPageResponseDto(
+            todoPage.getPageable().getPageNumber(),
+            size,
+            todoPage.getTotalPages(),
+            todoPage.toList()
+        );
     }
 
-    public List<Todo> getProgress(BigInteger id, String token) {
+    public TodosPageResponseDto getProgress(BigInteger id, String token, int page, int size) {
         User u = userRepo
             .findById(id)
             .orElseThrow(() -> new AppException("User not found"));
         if (!tokenService.validate(token).equals(u.getEmail()))
             throw new ForbiddenException("Invalid token");
-        return todosRepo.getInProgress(id);
+        Page<Todo> todoPage = todosRepo.getInProgress(id, PageRequest.of(page, size));
+        return new TodosPageResponseDto(
+            todoPage.getPageable().getPageNumber(),
+            size,
+            todoPage.getTotalPages(),
+            todoPage.toList()
+        );
     }
 
-    public List<Todo> getPending(BigInteger id, String token) {
+    public TodosPageResponseDto getPending(BigInteger id, String token, int page, int size) {
         User u = userRepo
             .findById(id)
             .orElseThrow(() -> new AppException("User not found"));
         if (!tokenService.validate(token).equals(u.getEmail()))
             throw new ForbiddenException("Invalid token");
-        return todosRepo.getPending(id);
+        Page<Todo> todoPage = todosRepo.getPending(id, PageRequest.of(page, size));
+        return new TodosPageResponseDto(
+                todoPage.getPageable().getPageNumber(),
+                size,
+                todoPage.getTotalPages(),
+                todoPage.toList()
+        );
     }
 
     public Todo newTodo(TodosRequestDTO data) {

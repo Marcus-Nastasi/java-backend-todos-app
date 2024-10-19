@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -49,32 +50,38 @@ public class TodosController {
     }
 
     @GetMapping(value = "/done/{user_id}")
-    public ResponseEntity<List<Todo>> getDone(
+    public ResponseEntity<TodosPageResponseDto> getDone(
             @PathVariable BigInteger user_id,
-            @RequestHeader Map<String, String> headers
+            @RequestHeader Map<String, String> headers,
+            @RequestParam("page") @DefaultValue("0") int page,
+            @RequestParam("size") @DefaultValue("10") int size
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        List<Todo> todoList = todosService.getDone(user_id, token);
+        TodosPageResponseDto todoList = todosService.getDone(user_id, token, page, size);
         return ResponseEntity.ok(todoList);
     }
 
     @GetMapping(value = "/progress/{user_id}")
-    public ResponseEntity<List<Todo>> getProgress(
+    public ResponseEntity<TodosPageResponseDto> getProgress(
             @PathVariable BigInteger user_id,
-            @RequestHeader Map<String, String> headers
+            @RequestHeader Map<String, String> headers,
+            @RequestParam("page") @DefaultValue("0") int page,
+            @RequestParam("size") @DefaultValue("10") int size
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        List<Todo> todoList = todosService.getProgress(user_id, token);
+        TodosPageResponseDto todoList = todosService.getProgress(user_id, token, page, size);
         return ResponseEntity.ok(todoList);
     }
 
     @GetMapping(value = "/pending/{user_id}")
-    public ResponseEntity<List<Todo>> getPending(
+    public ResponseEntity<TodosPageResponseDto> getPending(
             @PathVariable BigInteger user_id,
-            @RequestHeader Map<String, String> headers
+            @RequestHeader Map<String, String> headers,
+            @RequestParam("page") @DefaultValue("0") int page,
+            @RequestParam("size") @DefaultValue("10") int size
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        List<Todo> todoList = todosService.getPending(user_id, token);
+        TodosPageResponseDto todoList = todosService.getPending(user_id, token, page, size);
         return ResponseEntity.ok(todoList);
     }
 
@@ -84,7 +91,7 @@ public class TodosController {
     ) {
         Todo todo = todosService.newTodo(data);
         return ResponseEntity
-            .status(HttpStatus.CREATED)
+            .created(URI.create("/api/todos/get/" + todo.getId()))
             .body(todo);
     }
 
