@@ -1,5 +1,6 @@
 package com.app.todos.application.controller.todos;
 
+import com.app.todos.domain.todos.DTOs.TodosPageResponseDto;
 import com.app.todos.domain.todos.DTOs.TodosRequestDTO;
 import com.app.todos.domain.todos.DTOs.TodosStatusDTO;
 import com.app.todos.domain.todos.DTOs.TodosUpdateDTO;
@@ -36,14 +37,14 @@ public class TodosController {
     }
 
     @GetMapping(value = "/all/{user_id}")
-    public ResponseEntity<List<Todo>> all(
+    public ResponseEntity<TodosPageResponseDto> all(
             @RequestParam("page") @DefaultValue("0") int page,
             @RequestParam("size") @DefaultValue("10") int size,
             @PathVariable BigInteger user_id,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        List<Todo> todoList = todosService.getAll(user_id, token, page, size);
+        TodosPageResponseDto todoList = todosService.getAll(user_id, token, page, size);
         return ResponseEntity.ok(todoList);
     }
 

@@ -1,5 +1,6 @@
 package com.app.todos.application.service.todos;
 
+import com.app.todos.domain.todos.DTOs.TodosPageResponseDto;
 import com.app.todos.domain.todos.DTOs.TodosRequestDTO;
 import com.app.todos.domain.todos.DTOs.TodosStatusDTO;
 import com.app.todos.domain.todos.DTOs.TodosUpdateDTO;
@@ -40,7 +41,7 @@ public class TodosService {
         return t;
     }
 
-    public List<Todo> getAll(
+    public TodosPageResponseDto getAll(
             BigInteger user_id,
             String token,
             int page,
@@ -50,9 +51,14 @@ public class TodosService {
             .findById(user_id)
             .orElseThrow(() -> new AppException("User not found"));
         if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
+            throw new ForbiddenException("");
         Page<Todo> todoPage = todosRepo.getUserTodos(user_id, PageRequest.of(page, size));
-        return todoPage.toList();
+        return new TodosPageResponseDto(
+            todoPage.getPageable().getPageNumber(),
+            size,
+            todoPage.getTotalPages(),
+            todoPage.toList()
+        );
     }
 
     public List<Todo> getDone(BigInteger id, String token) {
