@@ -40,18 +40,18 @@ public class TodosService {
         return t;
     }
 
-    private TodosPageResponseDto searchByTitle(
+    private TodosPageResponseDto searchByTitleOrDescription(
             BigInteger id,
             String query,
             int page,
             int size
     ) {
-        Page<Todo> todoPage = todosRepo.searchByTitle(query, PageRequest.of(page, size));
+        Page<Todo> todoPage = todosRepo.searchByTitleOrDesc(query, PageRequest.of(page, size));
         return new TodosPageResponseDto(
-                todoPage.getPageable().getPageNumber(),
-                size,
-                todoPage.getTotalPages(),
-                todoPage.toList()
+            todoPage.getPageable().getPageNumber(),
+            size,
+            todoPage.getTotalPages(),
+            todoPage.toList()
         );
     }
 
@@ -68,7 +68,7 @@ public class TodosService {
         if (!tokenService.validate(token).equals(u.getEmail()))
             throw new ForbiddenException("");
         if (query != null) {
-            return this.searchByTitle(user_id, query, page, size);
+            return this.searchByTitleOrDescription(user_id, query, page, size);
         }
         Page<Todo> todoPage = todosRepo.getUserTodos(user_id, PageRequest.of(page, size));
         return new TodosPageResponseDto(

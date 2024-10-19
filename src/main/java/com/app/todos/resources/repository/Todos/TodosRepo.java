@@ -40,10 +40,10 @@ public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
             "SELECT t.* FROM Todos t " +
             "LEFT JOIN users u " +
             "ON t.user_id = u.id  " +
-            "WHERE(:query IS NULL OR t.title LIKE CONCAT('%', :query, '%') " +
-            "OR t.description LIKE CONCAT('%', :query, '%')) " +
+            "WHERE(:query IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "OR (:query IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
             "ORDER BY t.id ASC;")
-    Page<Todo> searchByTitle(
+    Page<Todo> searchByTitleOrDesc(
             @Param("query") String query,
             Pageable pageable
     );
