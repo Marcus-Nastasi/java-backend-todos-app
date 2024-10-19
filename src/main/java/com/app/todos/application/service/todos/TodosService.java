@@ -40,10 +40,25 @@ public class TodosService {
         return t;
     }
 
+    private TodosPageResponseDto searchByTitle(
+            BigInteger id,
+            String query,
+            int page,
+            int size
+    ) {
+        Page<Todo> todoPage = todosRepo.searchByTitle(query, PageRequest.of(page, size));
+        return new TodosPageResponseDto(
+                todoPage.getPageable().getPageNumber(),
+                size,
+                todoPage.getTotalPages(),
+                todoPage.toList()
+        );
+    }
+
     public TodosPageResponseDto getAll(
             BigInteger user_id,
             String token,
-            //String status,
+            String query,
             int page,
             int size
     ) {
@@ -52,6 +67,9 @@ public class TodosService {
             .orElseThrow(() -> new AppException("User not found"));
         if (!tokenService.validate(token).equals(u.getEmail()))
             throw new ForbiddenException("");
+        if (query != null) {
+            return this.searchByTitle(user_id, query, page, size);
+        }
         Page<Todo> todoPage = todosRepo.getUserTodos(user_id, PageRequest.of(page, size));
         return new TodosPageResponseDto(
             todoPage.getPageable().getPageNumber(),
@@ -99,16 +117,22 @@ public class TodosService {
             throw new ForbiddenException("Invalid token");
         Page<Todo> todoPage = todosRepo.getPending(id, PageRequest.of(page, size));
         return new TodosPageResponseDto(
-                todoPage.getPageable().getPageNumber(),
-                size,
-                todoPage.getTotalPages(),
-                todoPage.toList()
+            todoPage.getPageable().getPageNumber(),
+            size,
+            todoPage.getTotalPages(),
+            todoPage.toList()
         );
     }
 
     public Todo newTodo(TodosRequestDTO data) {
         Todo t = new Todo(
-            data.user_id(), data.client(), data.title(), data.description(), data.link(), data.due(), data.priority()
+            data.user_id(),
+            data.client(),
+            data.title(),
+            data.description(),
+            data.link(),
+            data.due(),
+            data.priority()
         );
         todosRepo.save(t);
         return t;

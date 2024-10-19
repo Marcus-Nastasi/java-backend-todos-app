@@ -7,6 +7,7 @@ import com.app.todos.domain.todos.DTOs.TodosUpdateDTO;
 import com.app.todos.domain.todos.Todo;
 import com.app.todos.application.service.todos.TodosService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.http.HttpStatus;
@@ -41,11 +42,13 @@ public class TodosController {
     public ResponseEntity<TodosPageResponseDto> all(
             @RequestParam("page") @DefaultValue("0") int page,
             @RequestParam("size") @DefaultValue("10") int size,
+            @RequestParam("query") @Nullable String query,
             @PathVariable BigInteger user_id,
             @RequestHeader Map<String, String> headers
     ) {
+        if (size <= 0) size = 10;
         String token = headers.get("authorization").replace("Bearer ", "");
-        TodosPageResponseDto todoList = todosService.getAll(user_id, token, page, size);
+        TodosPageResponseDto todoList = todosService.getAll(user_id, token, query, page, size);
         return ResponseEntity.ok(todoList);
     }
 
@@ -56,6 +59,7 @@ public class TodosController {
             @RequestParam("page") @DefaultValue("0") int page,
             @RequestParam("size") @DefaultValue("10") int size
     ) {
+        if (size <= 0) size = 10;
         String token = headers.get("authorization").replace("Bearer ", "");
         TodosPageResponseDto todoList = todosService.getDone(user_id, token, page, size);
         return ResponseEntity.ok(todoList);
@@ -68,6 +72,7 @@ public class TodosController {
             @RequestParam("page") @DefaultValue("0") int page,
             @RequestParam("size") @DefaultValue("10") int size
     ) {
+        if (size <= 0) size = 10;
         String token = headers.get("authorization").replace("Bearer ", "");
         TodosPageResponseDto todoList = todosService.getProgress(user_id, token, page, size);
         return ResponseEntity.ok(todoList);
@@ -80,6 +85,7 @@ public class TodosController {
             @RequestParam("page") @DefaultValue("0") int page,
             @RequestParam("size") @DefaultValue("10") int size
     ) {
+        if (size <= 0) size = 10;
         String token = headers.get("authorization").replace("Bearer ", "");
         TodosPageResponseDto todoList = todosService.getPending(user_id, token, page, size);
         return ResponseEntity.ok(todoList);
