@@ -44,7 +44,7 @@ public class TodosService {
         return t;
     }
 
-    private TodosPageResponseDto searchByTitleOrDescription(
+    public TodosPageResponseDto searchByTitleOrDescription(
             BigInteger user_id,
             String query,
             int page,
@@ -144,7 +144,7 @@ public class TodosService {
     public Todo updateStatus(BigInteger id, TodosStatusDTO data, String token) {
         Todo t = todosRepo
             .findById(id)
-            .orElseThrow(() -> new AppException("User not found"));
+            .orElseThrow(() -> new AppException("Todo not found"));
         this.validateUserToken(t.getUser_id(), token);
         t.setStatus(data.status());
         todosRepo.save(t);
