@@ -10,14 +10,12 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -50,45 +48,6 @@ public class TodosController {
         if (size <= 0) size = 10;
         String token = headers.get("authorization").replace("Bearer ", "");
         TodosPageResponseDto todoList = todosService.getAll(user_id, token, query, status, page, size);
-        return ResponseEntity.ok(todoList);
-    }
-
-    @GetMapping(value = "/done/{user_id}")
-    public ResponseEntity<TodosPageResponseDto> getDone(
-            @PathVariable BigInteger user_id,
-            @RequestHeader Map<String, String> headers,
-            @RequestParam("page") @DefaultValue("0") int page,
-            @RequestParam("size") @DefaultValue("10") int size
-    ) {
-        if (size <= 0) size = 10;
-        String token = headers.get("authorization").replace("Bearer ", "");
-        TodosPageResponseDto todoList = todosService.getDone(user_id, token, page, size);
-        return ResponseEntity.ok(todoList);
-    }
-
-    @GetMapping(value = "/progress/{user_id}")
-    public ResponseEntity<TodosPageResponseDto> getProgress(
-            @PathVariable BigInteger user_id,
-            @RequestHeader Map<String, String> headers,
-            @RequestParam("page") @DefaultValue("0") int page,
-            @RequestParam("size") @DefaultValue("10") int size
-    ) {
-        if (size <= 0) size = 10;
-        String token = headers.get("authorization").replace("Bearer ", "");
-        TodosPageResponseDto todoList = todosService.getProgress(user_id, token, page, size);
-        return ResponseEntity.ok(todoList);
-    }
-
-    @GetMapping(value = "/pending/{user_id}")
-    public ResponseEntity<TodosPageResponseDto> getPending(
-            @PathVariable BigInteger user_id,
-            @RequestHeader Map<String, String> headers,
-            @RequestParam("page") @DefaultValue("0") int page,
-            @RequestParam("size") @DefaultValue("10") int size
-    ) {
-        if (size <= 0) size = 10;
-        String token = headers.get("authorization").replace("Bearer ", "");
-        TodosPageResponseDto todoList = todosService.getPending(user_id, token, page, size);
         return ResponseEntity.ok(todoList);
     }
 

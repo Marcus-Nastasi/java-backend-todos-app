@@ -123,24 +123,31 @@ public class TodosServiceTests {
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
         when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
-        when(todosRepo.getDone(any(BigInteger.class), any(Pageable.class))).thenReturn(todoPage);
+        when(
+            todosRepo.getUserTodos(
+                any(BigInteger.class),
+                any(String.class),
+                any(Integer.class),
+                any(Pageable.class)
+            )
+        ).thenReturn(todoPage);
 
         assertEquals(
-            todosService.getDone(BigInteger.valueOf(1500), token, 0, 10),
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "2", 0, 10),
             todosPageResponseDto
         );
         assertDoesNotThrow(() -> {
-            todosService.getDone(BigInteger.valueOf(1500), token, 0, 10);
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "2", 0, 10);
         });
         assertEquals(
             Status.DONE,
-            todosService.getDone(BigInteger.valueOf(1500), token, 0, 10)
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "2", 0, 10)
                 .data()
                 .getFirst()
                 .getStatus()
         );
         assertThrows(JWTVerificationException.class, () -> {
-            todosService.getDone(BigInteger.valueOf(1500), falseToken, 0, 10);
+            todosService.getAll(BigInteger.valueOf(1500), falseToken, "", "2", 0, 10);
         });
     }
 
@@ -152,33 +159,40 @@ public class TodosServiceTests {
         todos.add(todo2);
         Page<Todo> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
         TodosPageResponseDto todosPageResponseDto = new TodosPageResponseDto(
-                todoPage.getPageable().getPageNumber(),
-                todoPage.getPageable().getPageSize(),
-                todoPage.getTotalPages(),
-                todos
+            todoPage.getPageable().getPageNumber(),
+            todoPage.getPageable().getPageSize(),
+            todoPage.getTotalPages(),
+            todos
         );
 
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
         when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
-        when(todosRepo.getInProgress(any(BigInteger.class), any(Pageable.class))).thenReturn(todoPage);
+        when(
+            todosRepo.getUserTodos(
+                any(BigInteger.class),
+                any(String.class),
+                any(Integer.class),
+                any(Pageable.class)
+            )
+        ).thenReturn(todoPage);
 
         assertEquals(
-            todosService.getProgress(BigInteger.valueOf(1500), token, 0, 10),
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "1", 0, 10),
             todosPageResponseDto
         );
         assertDoesNotThrow(() -> {
-            todosService.getProgress(BigInteger.valueOf(1500), token, 0, 10);
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "1", 0, 10);
         });
         assertEquals(
             Status.PROGRESS,
-            todosService.getProgress(BigInteger.valueOf(1500), token, 0, 10)
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "1", 0, 10)
                 .data()
                 .getFirst()
                 .getStatus()
         );
         assertThrows(JWTVerificationException.class, () -> {
-            todosService.getProgress(BigInteger.valueOf(1500), falseToken, 0, 10);
+            todosService.getAll(BigInteger.valueOf(1500), falseToken, "", "1", 0, 10);
         });
     }
 
@@ -190,33 +204,40 @@ public class TodosServiceTests {
         todos.add(todo2);
         Page<Todo> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
         TodosPageResponseDto todosPageResponseDto = new TodosPageResponseDto(
-                todoPage.getPageable().getPageNumber(),
-                todoPage.getPageable().getPageSize(),
-                todoPage.getTotalPages(),
-                todos
+            todoPage.getPageable().getPageNumber(),
+            todoPage.getPageable().getPageSize(),
+            todoPage.getTotalPages(),
+            todos
         );
 
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
         when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
-        when(todosRepo.getPending(any(BigInteger.class), any(Pageable.class))).thenReturn(todoPage);
+        when(
+            todosRepo.getUserTodos(
+                any(BigInteger.class),
+                any(String.class),
+                any(Integer.class),
+                any(Pageable.class)
+            )
+        ).thenReturn(todoPage);
 
         assertEquals(
-            todosService.getPending(BigInteger.valueOf(1500), token, 0, 10),
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10),
             todosPageResponseDto
         );
         assertDoesNotThrow(() -> {
-            todosService.getPending(BigInteger.valueOf(1500), token, 0, 10);
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10);
         });
         assertEquals(
             Status.PENDING,
-            todosService.getPending(BigInteger.valueOf(1500), token, 0, 10)
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10)
                 .data()
                 .getFirst()
                 .getStatus()
         );
         assertThrows(JWTVerificationException.class, () -> {
-            todosService.getPending(BigInteger.valueOf(1500), falseToken, 0, 10);
+            todosService.getAll(BigInteger.valueOf(1500), falseToken, "", "0", 0, 10);
         });
     }
 

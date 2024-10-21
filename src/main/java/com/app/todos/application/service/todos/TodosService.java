@@ -63,24 +63,6 @@ public class TodosService {
         return this.mapToTodosPageResponseDto(todoPage);
     }
 
-    public TodosPageResponseDto getDone(BigInteger user_id, String token, int page, int size) {
-        this.validateUserToken(user_id, token);
-        Page<Todo> todoPage = todosRepo.getDone(user_id, PageRequest.of(page, size));
-        return this.mapToTodosPageResponseDto(todoPage);
-    }
-
-    public TodosPageResponseDto getProgress(BigInteger user_id, String token, int page, int size) {
-        this.validateUserToken(user_id, token);
-        Page<Todo> todoPage = todosRepo.getInProgress(user_id, PageRequest.of(page, size));
-        return this.mapToTodosPageResponseDto(todoPage);
-    }
-
-    public TodosPageResponseDto getPending(BigInteger user_id, String token, int page, int size) {
-        this.validateUserToken(user_id, token);
-        Page<Todo> todoPage = todosRepo.getPending(user_id, PageRequest.of(page, size));
-        return this.mapToTodosPageResponseDto(todoPage);
-    }
-
     public Todo newTodo(TodosRequestDTO data) {
         Todo t = new Todo(
             data.user_id(),
