@@ -193,6 +193,7 @@ public class TodosServiceTests {
                 todoPage.getTotalPages(),
                 todos
         );
+
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
         when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);

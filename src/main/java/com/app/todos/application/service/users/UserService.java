@@ -44,11 +44,15 @@ public class UserService {
     }
 
     public User update(BigInteger id, UserUpdateDTO data, String token) {
-        User u = userRepo
-            .findById(id)
-            .orElseThrow(() -> new AppException("Could not find the user"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
+        if (
+            data.name().isEmpty()
+            || data.email().isEmpty()
+            || data.currentPassword().isEmpty()
+            || data.newPassword().isEmpty()
+        ) {
+            throw new AppException("name, email or password cannot be null");
+        }
+        User u = this.get(id, token);
         if (!passwordEncoder.matches(data.currentPassword(), u.getPassword()))
             throw new ForbiddenException("Invalid password");
         String encoded = passwordEncoder.encode(data.newPassword());
@@ -60,11 +64,7 @@ public class UserService {
     }
 
     public User delete(BigInteger id, String token) {
-        User u = userRepo
-            .findById(id)
-            .orElseThrow(() -> new AppException("Could not find the user"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
+        User u = this.get(id, token);
         userRepo.deleteById(id);
         return u;
     }

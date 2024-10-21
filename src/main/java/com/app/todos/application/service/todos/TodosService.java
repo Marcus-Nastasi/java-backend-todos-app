@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 
 @Service
 public class TodosService {
@@ -137,6 +138,7 @@ public class TodosService {
         t.setLink(data.link());
         t.setDue(data.due());
         t.setPriority(data.priority());
+        t.setLast_updated(LocalDate.now());
         todosRepo.save(t);
         return t;
     }
@@ -147,6 +149,7 @@ public class TodosService {
             .orElseThrow(() -> new AppException("Todo not found"));
         this.validateUserToken(t.getUser_id(), token);
         t.setStatus(data.status());
+        t.setLast_updated(LocalDate.now());
         todosRepo.save(t);
         return t;
     }

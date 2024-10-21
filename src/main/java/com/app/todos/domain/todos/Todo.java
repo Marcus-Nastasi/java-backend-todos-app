@@ -40,8 +40,18 @@ public class Todo {
     @Column
     @Enumerated(value = EnumType.ORDINAL)
     private Priority priority;
+    @Column(name = "last_updated")
+    private LocalDate last_updated;
 
-    public Todo(BigInteger user_id, String client, String title, String description, String link, LocalDate due, Priority priority) {
+    public Todo(
+            BigInteger user_id,
+            String client,
+            String title,
+            String description,
+            String link,
+            LocalDate due,
+            Priority priority
+    ) {
         this.user_id = user_id;
         this.client = client;
         this.title = title;
@@ -51,5 +61,6 @@ public class Todo {
         this.due = due;
         this.status = Status.PENDING;
         this.priority = priority;
+        this.last_updated = LocalDate.now();
     }
 }
