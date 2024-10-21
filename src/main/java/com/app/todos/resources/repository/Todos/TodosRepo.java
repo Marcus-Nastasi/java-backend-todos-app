@@ -21,25 +21,8 @@ public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
     Page<Todo> getUserTodos(
         @Param("user_id") BigInteger user_id,
         @Param("query") String query,
+        // status: 0 = pending, 1 = in progress, 2 = done
         @Param("status") Integer status,
-        Pageable pageable
-    );
-
-    @Query(nativeQuery = true, value = "SELECT * FROM todos WHERE(user_id=?1 AND status=1);")
-    Page<Todo> getInProgress(
-        BigInteger id,
-        Pageable pageable
-    );
-
-    @Query(nativeQuery = true, value = "SELECT * FROM todos WHERE(user_id=?1 AND status=0);")
-    Page<Todo> getPending(
-        BigInteger id,
-        Pageable pageable
-    );
-
-    @Query(nativeQuery = true, value = "SELECT * FROM todos WHERE(user_id=?1 AND status=2);")
-    Page<Todo> getDone(
-        BigInteger id,
         Pageable pageable
     );
 }

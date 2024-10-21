@@ -1,5 +1,6 @@
 package com.app.todos.application.service.todos;
 
+import com.app.todos.application.service.users.UserService;
 import com.app.todos.domain.todos.DTOs.TodosPageResponseDto;
 import com.app.todos.domain.todos.DTOs.TodosRequestDTO;
 import com.app.todos.domain.todos.DTOs.TodosStatusDTO;
@@ -28,20 +29,14 @@ public class TodosService {
     private TokenService tokenService;
     @Autowired
     private UserRepo userRepo;
-
-    private void validateUserToken(BigInteger user_id, String token) {
-        User u = userRepo
-            .findById(user_id)
-            .orElseThrow(() -> new AppException("User not found"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
-    }
+    @Autowired
+    private UserService userService;
 
     public Todo get(BigInteger id, String token) {
         Todo t = todosRepo
             .findById(id)
             .orElseThrow(() -> new AppException("Todo not found"));
-        this.validateUserToken(t.getUser_id(), token);
+        userService.validateUserToken(t.getUser_id(), token);
         return t;
     }
 
@@ -53,7 +48,7 @@ public class TodosService {
             int page,
             int size
     ) {
-        this.validateUserToken(user_id, token);
+        userService.validateUserToken(user_id, token);
         Page<Todo> todoPage = todosRepo.getUserTodos(
             user_id,
             query,
@@ -81,7 +76,7 @@ public class TodosService {
         Todo t = todosRepo
             .findById(id)
             .orElseThrow(() -> new AppException("Todo not found"));
-        this.validateUserToken(t.getUser_id(), token);
+        userService.validateUserToken(t.getUser_id(), token);
         t.setTitle(data.title());
         t.setClient(data.client());
         t.setDescription(data.description());
@@ -97,7 +92,7 @@ public class TodosService {
         Todo t = todosRepo
             .findById(id)
             .orElseThrow(() -> new AppException("Todo not found"));
-        this.validateUserToken(t.getUser_id(), token);
+        userService.validateUserToken(t.getUser_id(), token);
         t.setStatus(data.status());
         t.setLast_updated(LocalDate.now());
         todosRepo.save(t);
@@ -108,7 +103,7 @@ public class TodosService {
         Todo t = todosRepo
             .findById(id)
             .orElseThrow(() -> new AppException("User not found"));
-        this.validateUserToken(t.getUser_id(), token);
+        userService.validateUserToken(t.getUser_id(), token);
         todosRepo.deleteById(id);
         return t;
     }

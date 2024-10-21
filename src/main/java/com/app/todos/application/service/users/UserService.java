@@ -23,13 +23,17 @@ public class UserService {
     @Autowired
     private TokenService tokenService;
 
-    public User get(BigInteger id, String token) {
+    public User validateUserToken(BigInteger user_id, String token) {
         User u = userRepo
-            .findById(id)
-            .orElseThrow(() -> new AppException("Could not find the user"));
+                .findById(user_id)
+                .orElseThrow(() -> new AppException("User not found"));
         if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new AppException("Invalid token");
+            throw new ForbiddenException("Invalid token");
         return u;
+    }
+
+    public User get(BigInteger id, String token) {
+        return this.validateUserToken(id, token);
     }
 
     public User newUser(UserRequestDTO data) {
