@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigInteger;
-import java.util.List;
 
 public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
 
@@ -38,12 +37,12 @@ public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
 
     @Query(nativeQuery = true, value =
             "SELECT t.* FROM Todos t " +
-            "LEFT JOIN users u " +
-            "ON t.user_id = u.id  " +
-            "WHERE(:query IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
-            "OR (:query IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "WHERE(t.user_id = :user_id) " +
+            "AND (:query IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "AND (:query IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
             "ORDER BY t.id ASC;")
     Page<Todo> searchByTitleOrDesc(
+            @Param("user_id") BigInteger user_id,
             @Param("query") String query,
             Pageable pageable
     );

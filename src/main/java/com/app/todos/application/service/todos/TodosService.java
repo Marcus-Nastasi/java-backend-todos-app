@@ -28,25 +28,29 @@ public class TodosService {
     @Autowired
     private UserRepo userRepo;
 
+    private void validateUserToken(BigInteger user_id, String token) {
+        User u = userRepo
+            .findById(user_id)
+            .orElseThrow(() -> new AppException("User not found"));
+        if (!tokenService.validate(token).equals(u.getEmail()))
+            throw new ForbiddenException("");
+    }
+
     public Todo get(BigInteger id, String token) {
         Todo t = todosRepo
             .findById(id)
             .orElseThrow(() -> new AppException("Todo not found"));
-        User u = userRepo
-            .findById(t.getUser_id())
-            .orElseThrow(() -> new AppException("User not found"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
+        this.validateUserToken(t.getUser_id(), token);
         return t;
     }
 
     private TodosPageResponseDto searchByTitleOrDescription(
-            BigInteger id,
+            BigInteger user_id,
             String query,
             int page,
             int size
     ) {
-        Page<Todo> todoPage = todosRepo.searchByTitleOrDesc(query, PageRequest.of(page, size));
+        Page<Todo> todoPage = todosRepo.searchByTitleOrDesc(user_id, query, PageRequest.of(page, size));
         return new TodosPageResponseDto(
             todoPage.getPageable().getPageNumber(),
             size,
@@ -62,11 +66,7 @@ public class TodosService {
             int page,
             int size
     ) {
-        User u = userRepo
-            .findById(user_id)
-            .orElseThrow(() -> new AppException("User not found"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("");
+        this.validateUserToken(user_id, token);
         if (query != null) {
             return this.searchByTitleOrDescription(user_id, query, page, size);
         }
@@ -79,13 +79,9 @@ public class TodosService {
         );
     }
 
-    public TodosPageResponseDto getDone(BigInteger id, String token, int page, int size) {
-        User u = userRepo
-            .findById(id)
-            .orElseThrow(() -> new AppException("User not found"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
-        Page<Todo> todoPage = todosRepo.getDone(id, PageRequest.of(page, size));
+    public TodosPageResponseDto getDone(BigInteger user_id, String token, int page, int size) {
+        this.validateUserToken(user_id, token);
+        Page<Todo> todoPage = todosRepo.getDone(user_id, PageRequest.of(page, size));
         return new TodosPageResponseDto(
             todoPage.getPageable().getPageNumber(),
             size,
@@ -94,13 +90,9 @@ public class TodosService {
         );
     }
 
-    public TodosPageResponseDto getProgress(BigInteger id, String token, int page, int size) {
-        User u = userRepo
-            .findById(id)
-            .orElseThrow(() -> new AppException("User not found"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
-        Page<Todo> todoPage = todosRepo.getInProgress(id, PageRequest.of(page, size));
+    public TodosPageResponseDto getProgress(BigInteger user_id, String token, int page, int size) {
+        this.validateUserToken(user_id, token);
+        Page<Todo> todoPage = todosRepo.getInProgress(user_id, PageRequest.of(page, size));
         return new TodosPageResponseDto(
             todoPage.getPageable().getPageNumber(),
             size,
@@ -109,13 +101,9 @@ public class TodosService {
         );
     }
 
-    public TodosPageResponseDto getPending(BigInteger id, String token, int page, int size) {
-        User u = userRepo
-            .findById(id)
-            .orElseThrow(() -> new AppException("User not found"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
-        Page<Todo> todoPage = todosRepo.getPending(id, PageRequest.of(page, size));
+    public TodosPageResponseDto getPending(BigInteger user_id, String token, int page, int size) {
+        this.validateUserToken(user_id, token);
+        Page<Todo> todoPage = todosRepo.getPending(user_id, PageRequest.of(page, size));
         return new TodosPageResponseDto(
             todoPage.getPageable().getPageNumber(),
             size,
@@ -142,11 +130,7 @@ public class TodosService {
         Todo t = todosRepo
             .findById(id)
             .orElseThrow(() -> new AppException("Todo not found"));
-        User u = userRepo
-            .findById(t.getUser_id())
-            .orElseThrow(() -> new AppException("User not found"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
+        this.validateUserToken(t.getUser_id(), token);
         t.setTitle(data.title());
         t.setClient(data.client());
         t.setDescription(data.description());
@@ -161,11 +145,7 @@ public class TodosService {
         Todo t = todosRepo
             .findById(id)
             .orElseThrow(() -> new AppException("User not found"));
-        User u = userRepo
-            .findById(t.getUser_id())
-            .orElseThrow(() -> new AppException("User not found"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
+        this.validateUserToken(t.getUser_id(), token);
         t.setStatus(data.status());
         todosRepo.save(t);
         return t;
@@ -175,11 +155,7 @@ public class TodosService {
         Todo t = todosRepo
             .findById(id)
             .orElseThrow(() -> new AppException("User not found"));
-        User u = userRepo
-            .findById(t.getUser_id())
-            .orElseThrow(() -> new AppException("User not found"));
-        if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("Invalid token");
+        this.validateUserToken(t.getUser_id(), token);
         todosRepo.deleteById(id);
         return t;
     }
