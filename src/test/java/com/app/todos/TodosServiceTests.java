@@ -85,22 +85,24 @@ public class TodosServiceTests {
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
         when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
-        when(todosRepo.getUserTodos(any(BigInteger.class), any(Pageable.class))).thenReturn(todoPage);
         when(
-            todosRepo.searchByTitleOrDesc(any(BigInteger.class),
-            any(String.class),
-            any(Pageable.class))
+            todosRepo.getUserTodos(
+                any(BigInteger.class),
+                any(String.class),
+                any(Integer.class),
+                any(Pageable.class)
+            )
         ).thenReturn(todoPage);
 
         assertEquals(
-            todosService.getAll(BigInteger.valueOf(1500), token, null, 0, 10),
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10),
             todosPageResponseDto
         );
         assertDoesNotThrow(() -> {
-            todosService.getAll(BigInteger.valueOf(1500), token, "", 0, 10);
+            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10);
         });
         assertThrows(JWTVerificationException.class, () -> {
-            todosService.getAll(BigInteger.valueOf(1500), falseToken, "", 0, 10);
+            todosService.getAll(BigInteger.valueOf(1500), falseToken, "", "0", 0, 10);
         });
     }
 

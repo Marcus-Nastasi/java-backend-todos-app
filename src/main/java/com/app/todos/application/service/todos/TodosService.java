@@ -34,7 +34,7 @@ public class TodosService {
             .findById(user_id)
             .orElseThrow(() -> new AppException("User not found"));
         if (!tokenService.validate(token).equals(u.getEmail()))
-            throw new ForbiddenException("");
+            throw new ForbiddenException("Invalid token");
     }
 
     public Todo get(BigInteger id, String token) {
@@ -45,72 +45,40 @@ public class TodosService {
         return t;
     }
 
-    public TodosPageResponseDto searchByTitleOrDescription(
-            BigInteger user_id,
-            String query,
-            int page,
-            int size
-    ) {
-        Page<Todo> todoPage = todosRepo.searchByTitleOrDesc(user_id, query, PageRequest.of(page, size));
-        return new TodosPageResponseDto(
-            todoPage.getPageable().getPageNumber(),
-            size,
-            todoPage.getTotalPages(),
-            todoPage.toList()
-        );
-    }
-
     public TodosPageResponseDto getAll(
             BigInteger user_id,
             String token,
             String query,
+            String status,
             int page,
             int size
     ) {
         this.validateUserToken(user_id, token);
-        if (query != null) {
-            return this.searchByTitleOrDescription(user_id, query, page, size);
-        }
-        Page<Todo> todoPage = todosRepo.getUserTodos(user_id, PageRequest.of(page, size));
-        return new TodosPageResponseDto(
-            todoPage.getPageable().getPageNumber(),
-            size,
-            todoPage.getTotalPages(),
-            todoPage.toList()
+        Page<Todo> todoPage = todosRepo.getUserTodos(
+            user_id,
+            query,
+            status != null && !status.isEmpty() ? Integer.parseInt(status) : null,
+            PageRequest.of(page, size)
         );
+        return this.mapToTodosPageResponseDto(todoPage);
     }
 
     public TodosPageResponseDto getDone(BigInteger user_id, String token, int page, int size) {
         this.validateUserToken(user_id, token);
         Page<Todo> todoPage = todosRepo.getDone(user_id, PageRequest.of(page, size));
-        return new TodosPageResponseDto(
-            todoPage.getPageable().getPageNumber(),
-            size,
-            todoPage.getTotalPages(),
-            todoPage.toList()
-        );
+        return this.mapToTodosPageResponseDto(todoPage);
     }
 
     public TodosPageResponseDto getProgress(BigInteger user_id, String token, int page, int size) {
         this.validateUserToken(user_id, token);
         Page<Todo> todoPage = todosRepo.getInProgress(user_id, PageRequest.of(page, size));
-        return new TodosPageResponseDto(
-            todoPage.getPageable().getPageNumber(),
-            size,
-            todoPage.getTotalPages(),
-            todoPage.toList()
-        );
+        return this.mapToTodosPageResponseDto(todoPage);
     }
 
     public TodosPageResponseDto getPending(BigInteger user_id, String token, int page, int size) {
         this.validateUserToken(user_id, token);
         Page<Todo> todoPage = todosRepo.getPending(user_id, PageRequest.of(page, size));
-        return new TodosPageResponseDto(
-            todoPage.getPageable().getPageNumber(),
-            size,
-            todoPage.getTotalPages(),
-            todoPage.toList()
-        );
+        return this.mapToTodosPageResponseDto(todoPage);
     }
 
     public Todo newTodo(TodosRequestDTO data) {
@@ -161,5 +129,14 @@ public class TodosService {
         this.validateUserToken(t.getUser_id(), token);
         todosRepo.deleteById(id);
         return t;
+    }
+
+    private TodosPageResponseDto mapToTodosPageResponseDto(Page<Todo> todoPage) {
+        return new TodosPageResponseDto(
+            todoPage.getPageable().getPageNumber(),
+            todoPage.getPageable().getPageSize(),
+            todoPage.getTotalPages(),
+            todoPage.toList()
+        );
     }
 }

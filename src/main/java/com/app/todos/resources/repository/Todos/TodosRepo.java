@@ -11,9 +11,17 @@ import java.math.BigInteger;
 
 public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM todos WHERE(user_id=?1);")
+    @Query(nativeQuery = true, value =
+            "SELECT t.* FROM Todos t " +
+            "WHERE(t.user_id = :user_id) " +
+            "AND (:query IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "AND (:query IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "AND (:status IS NULL OR t.status = :status) " +
+            "ORDER BY t.id ASC;")
     Page<Todo> getUserTodos(
-        BigInteger id,
+        @Param("user_id") BigInteger user_id,
+        @Param("query") String query,
+        @Param("status") Integer status,
         Pageable pageable
     );
 
@@ -33,17 +41,5 @@ public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
     Page<Todo> getDone(
         BigInteger id,
         Pageable pageable
-    );
-
-    @Query(nativeQuery = true, value =
-            "SELECT t.* FROM Todos t " +
-            "WHERE(t.user_id = :user_id) " +
-            "AND (:query IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
-            "AND (:query IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
-            "ORDER BY t.id ASC;")
-    Page<Todo> searchByTitleOrDesc(
-            @Param("user_id") BigInteger user_id,
-            @Param("query") String query,
-            Pageable pageable
     );
 }

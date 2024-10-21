@@ -43,12 +43,13 @@ public class TodosController {
             @RequestParam("page") @DefaultValue("0") int page,
             @RequestParam("size") @DefaultValue("10") int size,
             @RequestParam("query") @Nullable String query,
+            @RequestParam("status") @Nullable String status,
             @PathVariable BigInteger user_id,
             @RequestHeader Map<String, String> headers
     ) {
         if (size <= 0) size = 10;
         String token = headers.get("authorization").replace("Bearer ", "");
-        TodosPageResponseDto todoList = todosService.getAll(user_id, token, query, page, size);
+        TodosPageResponseDto todoList = todosService.getAll(user_id, token, query, status, page, size);
         return ResponseEntity.ok(todoList);
     }
 
