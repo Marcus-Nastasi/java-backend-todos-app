@@ -4,6 +4,7 @@ import com.app.todos.application.service.auth.TokenService;
 import com.app.todos.application.service.metrics.MetricService;
 import com.app.todos.application.service.todos.TodosService;
 import com.app.todos.application.service.users.UserService;
+import com.app.todos.domain.metrics.dtos.MetricsNumbersResponseDto;
 import com.app.todos.domain.todos.Todo;
 import com.app.todos.domain.users.User;
 import com.app.todos.resources.enums.todos.Priority;
@@ -16,10 +17,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -47,67 +51,66 @@ public class MetricsServiceTests {
 
     @Test
     void getTodosByUserTests() {
-        MetricsQntByStatResponseDto metricsQntByPriorDto = new MetricsQntByStatResponseDto(
-            1L, 1L, 1L, 3L
-        );
-        MetricsQntByStatResponseDto metricsQntByPriorDto2 = new MetricsQntByStatResponseDto(
-            1L, 0L, 1L, 2L
+        MetricsNumbersResponseDto metricsQntByPriorDto = new MetricsNumbersResponseDto(
+            1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, BigDecimal.valueOf(0)
         );
 
-        when(
-            todosRepo.findQuantityByStatus(
-                BigInteger.valueOf(1),
-                LocalDate.of(2024, 1, 15),
-                LocalDate.now()
-            )
-        ).thenReturn(Map.of("pending", 1L, "inProgress", 1L, "done", 1L, "total", 3L));
-        when(
-            todosRepo.findQuantityByStatus(
-                BigInteger.valueOf(1),
-                LocalDate.of(2024, 7, 10),
-                LocalDate.now()
-            )
-        ).thenReturn(Map.of("pending", 1L, "inProgress", 0L, "done", 1L, "total", 2L));
+        when(userService.validateUserToken(any(BigInteger.class), any(String.class))).thenReturn(user);
+        when(todosRepo.metricsQuery(
+            BigInteger.valueOf(1), "query", LocalDate.of(2024, 1, 15), LocalDate.now()
+        )).thenReturn(Map.of(
+            "total", BigDecimal.valueOf(1),
+            "high", BigDecimal.valueOf(1),
+            "medium", BigDecimal.valueOf(0),
+            "low", BigDecimal.valueOf(0),
+            "pending", BigDecimal.valueOf(1),
+            "inprogress", BigDecimal.valueOf(0),
+            "done", BigDecimal.valueOf(0),
+            "overdue", BigDecimal.valueOf(0),
+            "future", BigDecimal.valueOf(0),
+            "completion_rate", BigDecimal.valueOf(0)
+        ));
+        when(todosRepo.metricsQuery(
+            BigInteger.valueOf(1), "query", LocalDate.of(2024, 7, 10), LocalDate.now()
+        )).thenReturn(Map.of(
+            "total", BigDecimal.valueOf(1),
+            "high", BigDecimal.valueOf(1),
+            "medium", BigDecimal.valueOf(0),
+            "low", BigDecimal.valueOf(0),
+            "pending", BigDecimal.valueOf(1),
+            "inprogress", BigDecimal.valueOf(0),
+            "done", BigDecimal.valueOf(0),
+            "overdue", BigDecimal.valueOf(0),
+            "future", BigDecimal.valueOf(0),
+            "completion_rate", BigDecimal.valueOf(0)
+        ));
 
         assertEquals(
             metricsQntByPriorDto,
-            metricService.getTodosByUser(
+            metricService.get(
                 BigInteger.valueOf(1),
                 token,
+                "query",
                 LocalDate.of(2024, 1, 15),
                 LocalDate.now()
             )
         );
         assertEquals(
-            metricsQntByPriorDto2,
-            metricService.getTodosByUser(
+            metricsQntByPriorDto,
+            metricService.get(
                 BigInteger.valueOf(1),
                 token,
+                "query",
                 LocalDate.of(2024, 7, 10),
                 LocalDate.now()
             )
         );
 
-        verify(
-            todosRepo,
-            times(2)
-        ).findQuantityByStatus(any(BigInteger.class), any(LocalDate.class), any(LocalDate.class));
-    }
-
-    @Test
-    void getTodosByPriority() {
-        MetricsQntByPriorDto metricsQntByPriorDto = new MetricsQntByPriorDto(1L, 1L, 1L);
-        when(todosRepo.findQuantityByPriority(any(BigInteger.class)))
-            .thenReturn(Map.of("high", 1L, "medium", 1L, "low", 1L));
-
-        assertEquals(
-            metricsQntByPriorDto,
-            metricService.getTodosQuantityByPriority(BigInteger.valueOf(1), token)
+        verify(todosRepo, times(2)).metricsQuery(
+            any(BigInteger.class),
+            any(String.class),
+            any(LocalDate.class),
+            any(LocalDate.class)
         );
-
-        verify(
-            todosRepo,
-            times(1)
-        ).findQuantityByPriority(any(BigInteger.class));
     }
 }
