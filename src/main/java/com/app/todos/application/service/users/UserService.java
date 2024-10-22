@@ -25,8 +25,8 @@ public class UserService {
 
     public User validateUserToken(BigInteger user_id, String token) {
         User u = userRepo
-                .findById(user_id)
-                .orElseThrow(() -> new AppException("User not found"));
+            .findById(user_id)
+            .orElseThrow(() -> new AppException("User not found"));
         if (!tokenService.validate(token).equals(u.getEmail()))
             throw new ForbiddenException("Invalid token");
         return u;

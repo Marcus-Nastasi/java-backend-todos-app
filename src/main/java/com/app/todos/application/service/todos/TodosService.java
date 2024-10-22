@@ -6,19 +6,19 @@ import com.app.todos.domain.todos.DTOs.TodosRequestDTO;
 import com.app.todos.domain.todos.DTOs.TodosStatusDTO;
 import com.app.todos.domain.todos.DTOs.TodosUpdateDTO;
 import com.app.todos.domain.todos.Todo;
-import com.app.todos.domain.users.User;
 import com.app.todos.web.handler.exception.AppException;
-import com.app.todos.web.handler.exception.ForbiddenException;
 import com.app.todos.resources.repository.Todos.TodosRepo;
 import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.application.service.auth.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TodosService {
@@ -31,14 +31,6 @@ public class TodosService {
     private UserRepo userRepo;
     @Autowired
     private UserService userService;
-
-    public Todo get(BigInteger id, String token) {
-        Todo t = todosRepo
-            .findById(id)
-            .orElseThrow(() -> new AppException("Todo not found"));
-        userService.validateUserToken(t.getUser_id(), token);
-        return t;
-    }
 
     public TodosPageResponseDto getAll(
             BigInteger user_id,
@@ -56,6 +48,19 @@ public class TodosService {
             PageRequest.of(page, size)
         );
         return this.mapToTodosPageResponseDto(todoPage);
+    }
+
+    public List<Todo> getAllNoPag(BigInteger user_id, String token, LocalDate from, LocalDate to) {
+        userService.validateUserToken(user_id, token);
+        return todosRepo.findByUserId(user_id, from, to);
+    }
+
+    public Todo get(BigInteger id, String token) {
+        Todo t = todosRepo
+                .findById(id)
+                .orElseThrow(() -> new AppException("Todo not found"));
+        userService.validateUserToken(t.getUser_id(), token);
+        return t;
     }
 
     public Todo newTodo(TodosRequestDTO data) {
