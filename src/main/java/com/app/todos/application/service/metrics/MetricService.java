@@ -3,6 +3,7 @@ package com.app.todos.application.service.metrics;
 import com.app.todos.application.service.auth.TokenService;
 import com.app.todos.application.service.todos.TodosService;
 import com.app.todos.application.service.users.UserService;
+import com.app.todos.domain.metrics.dtos.MetricsQntByPriorDto;
 import com.app.todos.domain.todos.DTOs.TodosPageResponseDto;
 import com.app.todos.domain.todos.Todo;
 import com.app.todos.domain.users.User;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MetricService {
@@ -30,7 +32,7 @@ public class MetricService {
     private TokenService tokenService;
 
     /*
-        1. Tarefas por Prioridade:
+        DONE 1. Tarefas por Prioridade:
         Quantidade de tarefas categorizadas por prioridade (Alta, Média, Baixa).
 
         2. Tarefas por Data de Criação ou Conclusão:
@@ -78,6 +80,18 @@ public class MetricService {
             LocalDate from,
             LocalDate to
     ) {
-        return todosService.getAllNoPag(user_id, token, from, to).size();
+        userService.validateUserToken(user_id, token);
+        if (to == null) to = LocalDate.now();
+        return todosRepo.findByUserId(user_id, from, to).size();
+    }
+
+    public MetricsQntByPriorDto getTodosQuantityByPriority(BigInteger user_id, String token) {
+        userService.validateUserToken(user_id, token);
+        Map<String, Long> stringMap = todosRepo.findQuantityByPriority(user_id);
+        return new MetricsQntByPriorDto(
+            stringMap.get("high"),
+            stringMap.get("medium"),
+            stringMap.get("low")
+        );
     }
 }

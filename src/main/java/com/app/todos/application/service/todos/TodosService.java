@@ -11,14 +11,12 @@ import com.app.todos.resources.repository.Todos.TodosRepo;
 import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.application.service.auth.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class TodosService {
@@ -48,11 +46,6 @@ public class TodosService {
             PageRequest.of(page, size)
         );
         return this.mapToTodosPageResponseDto(todoPage);
-    }
-
-    public List<Todo> getAllNoPag(BigInteger user_id, String token, LocalDate from, LocalDate to) {
-        userService.validateUserToken(user_id, token);
-        return todosRepo.findByUserId(user_id, from, to);
     }
 
     public Todo get(BigInteger id, String token) {

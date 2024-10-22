@@ -1,7 +1,7 @@
 package com.app.todos.resources.repository.Todos;
 
+import com.app.todos.domain.metrics.dtos.MetricsQntByPriorDto;
 import com.app.todos.domain.todos.Todo;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
 
@@ -29,12 +30,22 @@ public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
         Pageable pageable
     );
 
-    @Query(nativeQuery = true, value = "SELECT t.* FROM Todo t " +
+    @Query(nativeQuery = true, value = "SELECT t.* FROM Todos t " +
             "WHERE t.user_id = :userId " +
-            "AND (:from IS NULL OR :to IS NULL OR t.creation >= :from AND t.creation <= :to);")
+            "AND (t.creation >= :from) " +
+            "AND (t.creation <= :to);")
     List<Todo> findByUserId(
-        @Param("userId") BigInteger userId,
-        @Param("from") LocalDate from,
-        @Param("to") LocalDate to
+            @Param("userId") BigInteger userId,
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to
     );
+
+    @Query(nativeQuery = true, value = """
+                SELECT COUNT(CASE WHEN t.priority = 0 THEN 1 END) AS high,
+                COUNT(CASE WHEN t.priority = 1 THEN 1 END) AS medium,
+                COUNT(CASE WHEN t.priority = 2 THEN 1 END) AS low
+                FROM todos t
+                WHERE t.user_id = :user_id;
+            """)
+    Map<String, Long> findQuantityByPriority(BigInteger user_id);
 }

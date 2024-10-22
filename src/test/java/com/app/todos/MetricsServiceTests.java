@@ -4,6 +4,7 @@ import com.app.todos.application.service.auth.TokenService;
 import com.app.todos.application.service.metrics.MetricService;
 import com.app.todos.application.service.todos.TodosService;
 import com.app.todos.application.service.users.UserService;
+import com.app.todos.domain.metrics.dtos.MetricsQntByPriorDto;
 import com.app.todos.domain.todos.DTOs.TodosPageResponseDto;
 import com.app.todos.domain.todos.Todo;
 import com.app.todos.domain.users.User;
@@ -26,6 +27,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -57,17 +59,15 @@ public class MetricsServiceTests {
     @Test
     void getTodosByUserTests() {
         when(
-            todosService.getAllNoPag(
+            todosRepo.findByUserId(
                 BigInteger.valueOf(1),
-                token,
                 LocalDate.of(2024, 1, 15),
                 LocalDate.now()
             )
         ).thenReturn(List.of(todo, todo2));
         when(
-            todosService.getAllNoPag(
+            todosRepo.findByUserId(
                 BigInteger.valueOf(1),
-                token,
                 LocalDate.of(2024, 7, 10),
                 LocalDate.now()
             )
@@ -93,8 +93,25 @@ public class MetricsServiceTests {
         );
 
         verify(
-            todosService,
+            todosRepo,
             times(2)
-        ).getAllNoPag(any(BigInteger.class), any(String.class), any(LocalDate.class), any(LocalDate.class));
+        ).findByUserId(any(BigInteger.class), any(LocalDate.class), any(LocalDate.class));
+    }
+
+    @Test
+    void getTodosByPriority() {
+        MetricsQntByPriorDto metricsQntByPriorDto = new MetricsQntByPriorDto(1L, 1L, 1L);
+        when(todosRepo.findQuantityByPriority(any(BigInteger.class)))
+            .thenReturn(Map.of("high", 1L, "medium", 1L, "low", 1L));
+
+        assertEquals(
+            metricsQntByPriorDto,
+            metricService.getTodosQuantityByPriority(BigInteger.valueOf(1), token)
+        );
+
+        verify(
+            todosRepo,
+            times(1)
+        ).findQuantityByPriority(any(BigInteger.class));
     }
 }
