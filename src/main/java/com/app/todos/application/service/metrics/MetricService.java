@@ -4,9 +4,8 @@ import com.app.todos.application.service.auth.TokenService;
 import com.app.todos.application.service.todos.TodosService;
 import com.app.todos.application.service.users.UserService;
 import com.app.todos.domain.metrics.dtos.MetricsQntByPriorDto;
-import com.app.todos.domain.todos.DTOs.TodosPageResponseDto;
+import com.app.todos.domain.metrics.dtos.MetricsQntByStatResponseDto;
 import com.app.todos.domain.todos.Todo;
-import com.app.todos.domain.users.User;
 import com.app.todos.resources.repository.Todos.TodosRepo;
 import com.app.todos.resources.repository.User.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,15 +73,23 @@ public class MetricService {
         Gráfico sugerido: Gráfico de barras mostrando a quantidade de tarefas programadas para os próximos dias ou semanas.
      */
 
-    public int getTodosByUser(
+    public MetricsQntByStatResponseDto getTodosByUser(
             BigInteger user_id,
             String token,
             LocalDate from,
             LocalDate to
     ) {
         userService.validateUserToken(user_id, token);
+        if (from == null) from = LocalDate.of(1900, 1, 1);
         if (to == null) to = LocalDate.now();
-        return todosRepo.findByUserId(user_id, from, to).size();
+        Map<String, Long> longMap = todosRepo
+            .findQuantityByStatus(user_id, from, to);
+        return new MetricsQntByStatResponseDto(
+            longMap.get("pending"),
+            longMap.get("inProgress"),
+            longMap.get("done"),
+            longMap.get("total")
+        );
     }
 
     public MetricsQntByPriorDto getTodosQuantityByPriority(BigInteger user_id, String token) {
@@ -92,6 +99,24 @@ public class MetricService {
             stringMap.get("high"),
             stringMap.get("medium"),
             stringMap.get("low")
+        );
+    }
+
+    public List<Todo> get(
+            BigInteger user_id,
+            String token,
+            String query,
+            // status: 0 = pending, 1 = in progress, 2 = done
+            String status,
+            LocalDate from,
+            LocalDate to
+    ) {
+        return todosRepo.massiveQuery(
+            user_id,
+            query,
+            status != null && !status.isEmpty() ? Integer.parseInt(status) : null,
+            from != null ? from : LocalDate.of(1900, 1, 1),
+            to != null ? to : LocalDate.now()
         );
     }
 }

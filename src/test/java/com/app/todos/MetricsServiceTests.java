@@ -5,6 +5,7 @@ import com.app.todos.application.service.metrics.MetricService;
 import com.app.todos.application.service.todos.TodosService;
 import com.app.todos.application.service.users.UserService;
 import com.app.todos.domain.metrics.dtos.MetricsQntByPriorDto;
+import com.app.todos.domain.metrics.dtos.MetricsQntByStatResponseDto;
 import com.app.todos.domain.todos.DTOs.TodosPageResponseDto;
 import com.app.todos.domain.todos.Todo;
 import com.app.todos.domain.users.User;
@@ -58,23 +59,30 @@ public class MetricsServiceTests {
 
     @Test
     void getTodosByUserTests() {
+        MetricsQntByStatResponseDto metricsQntByPriorDto = new MetricsQntByStatResponseDto(
+            1L, 1L, 1L, 3L
+        );
+        MetricsQntByStatResponseDto metricsQntByPriorDto2 = new MetricsQntByStatResponseDto(
+            1L, 0L, 1L, 2L
+        );
+
         when(
-            todosRepo.findByUserId(
+            todosRepo.findQuantityByStatus(
                 BigInteger.valueOf(1),
                 LocalDate.of(2024, 1, 15),
                 LocalDate.now()
             )
-        ).thenReturn(List.of(todo, todo2));
+        ).thenReturn(Map.of("pending", 1L, "inProgress", 1L, "done", 1L, "total", 3L));
         when(
-            todosRepo.findByUserId(
+            todosRepo.findQuantityByStatus(
                 BigInteger.valueOf(1),
                 LocalDate.of(2024, 7, 10),
                 LocalDate.now()
             )
-        ).thenReturn(List.of(todo2));
+        ).thenReturn(Map.of("pending", 1L, "inProgress", 0L, "done", 1L, "total", 2L));
 
         assertEquals(
-            2,
+            metricsQntByPriorDto,
             metricService.getTodosByUser(
                 BigInteger.valueOf(1),
                 token,
@@ -83,7 +91,7 @@ public class MetricsServiceTests {
             )
         );
         assertEquals(
-            1,
+            metricsQntByPriorDto2,
             metricService.getTodosByUser(
                 BigInteger.valueOf(1),
                 token,
@@ -95,7 +103,7 @@ public class MetricsServiceTests {
         verify(
             todosRepo,
             times(2)
-        ).findByUserId(any(BigInteger.class), any(LocalDate.class), any(LocalDate.class));
+        ).findQuantityByStatus(any(BigInteger.class), any(LocalDate.class), any(LocalDate.class));
     }
 
     @Test
