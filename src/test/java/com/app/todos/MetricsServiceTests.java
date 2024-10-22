@@ -10,6 +10,7 @@ import com.app.todos.domain.users.User;
 import com.app.todos.resources.enums.todos.Priority;
 import com.app.todos.resources.repository.Todos.TodosRepo;
 import com.app.todos.resources.repository.User.UserRepo;
+import com.app.todos.web.handler.exception.ForbiddenException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +22,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -52,7 +52,7 @@ public class MetricsServiceTests {
     @Test
     void getTodosByUserTests() {
         MetricsNumbersResponseDto metricsQntByPriorDto = new MetricsNumbersResponseDto(
-            1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, BigDecimal.valueOf(0)
+            1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, BigDecimal.valueOf(0.77)
         );
 
         when(userService.validateUserToken(any(BigInteger.class), any(String.class))).thenReturn(user);
@@ -68,7 +68,7 @@ public class MetricsServiceTests {
             "done", BigDecimal.valueOf(0),
             "overdue", BigDecimal.valueOf(0),
             "future", BigDecimal.valueOf(0),
-            "completion_rate", BigDecimal.valueOf(0)
+            "completion_rate", BigDecimal.valueOf(0.77)
         ));
         when(todosRepo.metricsQuery(
             BigInteger.valueOf(1), "query", LocalDate.of(2024, 7, 10), LocalDate.now()
@@ -84,20 +84,31 @@ public class MetricsServiceTests {
             "future", BigDecimal.valueOf(0),
             "completion_rate", BigDecimal.valueOf(0)
         ));
+        when(userService.validateUserToken(any(BigInteger.class), eq(falseToken)))
+            .thenThrow(ForbiddenException.class);
 
         assertEquals(
-            metricsQntByPriorDto,
+            metricsQntByPriorDto.completion_rate(),
             metricService.get(
                 BigInteger.valueOf(1),
                 token,
                 "query",
                 LocalDate.of(2024, 1, 15),
                 LocalDate.now()
-            )
+            ).completion_rate()
         );
         assertEquals(
-            metricsQntByPriorDto,
+            metricsQntByPriorDto.pending(),
             metricService.get(
+                BigInteger.valueOf(1),
+                token,
+                "query",
+                LocalDate.of(2024, 7, 10),
+                LocalDate.now()
+            ).pending()
+        );
+        assertDoesNotThrow(
+            () -> metricService.get(
                 BigInteger.valueOf(1),
                 token,
                 "query",
@@ -105,8 +116,18 @@ public class MetricsServiceTests {
                 LocalDate.now()
             )
         );
+        assertThrows(
+            ForbiddenException.class,
+            () -> metricService.get(
+                BigInteger.valueOf(1),
+                falseToken,
+                "query",
+                LocalDate.of(2024, 7, 10),
+                LocalDate.now()
+            )
+        );
 
-        verify(todosRepo, times(2)).metricsQuery(
+        verify(todosRepo, times(3)).metricsQuery(
             any(BigInteger.class),
             any(String.class),
             any(LocalDate.class),
