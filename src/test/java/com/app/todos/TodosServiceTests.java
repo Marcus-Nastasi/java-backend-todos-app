@@ -89,20 +89,31 @@ public class TodosServiceTests {
             todosRepo.getUserTodos(
                 any(BigInteger.class),
                 any(String.class),
+                any(String.class),
                 any(Integer.class),
+                any(Integer.class),
+                any(LocalDate.class),
+                any(LocalDate.class),
+                any(LocalDate.class),
                 any(Pageable.class)
             )
         ).thenReturn(todoPage);
 
         assertEquals(
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10),
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "0", "0", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            ),
             todosPageResponseDto
         );
         assertDoesNotThrow(() -> {
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10);
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "0", "0", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            );
         });
         assertThrows(JWTVerificationException.class, () -> {
-            todosService.getAll(BigInteger.valueOf(1500), falseToken, "", "0", 0, 10);
+            todosService.getAll(
+                BigInteger.valueOf(1500), falseToken, "", "0", "0", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            );
         });
     }
 
@@ -127,27 +138,40 @@ public class TodosServiceTests {
             todosRepo.getUserTodos(
                 any(BigInteger.class),
                 any(String.class),
+                any(String.class),
                 any(Integer.class),
+                any(Integer.class),
+                any(LocalDate.class),
+                any(LocalDate.class),
+                any(LocalDate.class),
                 any(Pageable.class)
             )
         ).thenReturn(todoPage);
 
         assertEquals(
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "2", 0, 10),
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "", "2", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            ),
             todosPageResponseDto
         );
         assertDoesNotThrow(() -> {
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "2", 0, 10);
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "", "2", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            );
         });
         assertEquals(
             Status.DONE,
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "2", 0, 10)
+            todosService.getAll(
+                    BigInteger.valueOf(1500), token, "", "", "2", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            )
                 .data()
                 .getFirst()
                 .getStatus()
         );
         assertThrows(JWTVerificationException.class, () -> {
-            todosService.getAll(BigInteger.valueOf(1500), falseToken, "", "2", 0, 10);
+            todosService.getAll(
+                BigInteger.valueOf(1500), falseToken, "", "", "2", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            );
         });
     }
 
@@ -170,29 +194,42 @@ public class TodosServiceTests {
         when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
         when(
             todosRepo.getUserTodos(
-                any(BigInteger.class),
-                any(String.class),
-                any(Integer.class),
-                any(Pageable.class)
+                    any(BigInteger.class),
+                    any(String.class),
+                    any(String.class),
+                    any(Integer.class),
+                    any(Integer.class),
+                    any(LocalDate.class),
+                    any(LocalDate.class),
+                    any(LocalDate.class),
+                    any(Pageable.class)
             )
         ).thenReturn(todoPage);
 
         assertEquals(
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "1", 0, 10),
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "", "1", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            ),
             todosPageResponseDto
         );
         assertDoesNotThrow(() -> {
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "1", 0, 10);
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "", "1", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            );
         });
         assertEquals(
             Status.PROGRESS,
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "1", 0, 10)
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "", "1", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            )
                 .data()
                 .getFirst()
                 .getStatus()
         );
         assertThrows(JWTVerificationException.class, () -> {
-            todosService.getAll(BigInteger.valueOf(1500), falseToken, "", "1", 0, 10);
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "", "1", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            );
         });
     }
 
@@ -215,29 +252,42 @@ public class TodosServiceTests {
         when(tokenService.validate(falseToken)).thenThrow(JWTVerificationException.class);
         when(
             todosRepo.getUserTodos(
-                any(BigInteger.class),
-                any(String.class),
-                any(Integer.class),
-                any(Pageable.class)
+                    any(BigInteger.class),
+                    any(String.class),
+                    any(String.class),
+                    any(Integer.class),
+                    any(Integer.class),
+                    any(LocalDate.class),
+                    any(LocalDate.class),
+                    any(LocalDate.class),
+                    any(Pageable.class)
             )
         ).thenReturn(todoPage);
 
         assertEquals(
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10),
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "", "0", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            ),
             todosPageResponseDto
         );
         assertDoesNotThrow(() -> {
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10);
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "", "0", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            );
         });
         assertEquals(
             Status.PENDING,
-            todosService.getAll(BigInteger.valueOf(1500), token, "", "0", 0, 10)
+            todosService.getAll(
+                BigInteger.valueOf(1500), token, "", "", "0", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            )
                 .data()
                 .getFirst()
                 .getStatus()
         );
         assertThrows(JWTVerificationException.class, () -> {
-            todosService.getAll(BigInteger.valueOf(1500), falseToken, "", "0", 0, 10);
+            todosService.getAll(
+                BigInteger.valueOf(1500), falseToken, "", "", "0", "", LocalDate.of(1900, 1, 1), LocalDate.now(), LocalDate.now(), 0, 10
+            );
         });
     }
 

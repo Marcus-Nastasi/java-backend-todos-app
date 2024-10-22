@@ -34,7 +34,14 @@ public class TodosService {
             BigInteger user_id,
             String token,
             String query,
+            String client,
+            // status: 0 = pending, 1 = in progress, 2 = done
             String status,
+            // priority: 0 = low, 1 = medium, 2 = high
+            String priority,
+            LocalDate from,
+            LocalDate to,
+            LocalDate due,
             int page,
             int size
     ) {
@@ -42,7 +49,12 @@ public class TodosService {
         Page<Todo> todoPage = todosRepo.getUserTodos(
             user_id,
             query,
+            client,
             status != null && !status.isEmpty() ? Integer.parseInt(status) : null,
+            priority != null && !priority.isEmpty() ? Integer.parseInt(priority) : null,
+            from != null ? from : LocalDate.of(1900, 1, 1),
+            to != null ? to : LocalDate.now(),
+            due != null ? due : LocalDate.of(2500, 1, 1),
             PageRequest.of(page, size)
         );
         return this.mapToTodosPageResponseDto(todoPage);
@@ -50,8 +62,8 @@ public class TodosService {
 
     public Todo get(BigInteger id, String token) {
         Todo t = todosRepo
-                .findById(id)
-                .orElseThrow(() -> new AppException("Todo not found"));
+            .findById(id)
+            .orElseThrow(() -> new AppException("Todo not found"));
         userService.validateUserToken(t.getUser_id(), token);
         return t;
     }

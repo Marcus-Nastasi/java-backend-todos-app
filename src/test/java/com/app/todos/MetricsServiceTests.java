@@ -4,35 +4,23 @@ import com.app.todos.application.service.auth.TokenService;
 import com.app.todos.application.service.metrics.MetricService;
 import com.app.todos.application.service.todos.TodosService;
 import com.app.todos.application.service.users.UserService;
-import com.app.todos.domain.metrics.dtos.MetricsQntByPriorDto;
-import com.app.todos.domain.metrics.dtos.MetricsQntByStatResponseDto;
-import com.app.todos.domain.todos.DTOs.TodosPageResponseDto;
 import com.app.todos.domain.todos.Todo;
 import com.app.todos.domain.users.User;
 import com.app.todos.resources.enums.todos.Priority;
 import com.app.todos.resources.repository.Todos.TodosRepo;
 import com.app.todos.resources.repository.User.UserRepo;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)

@@ -1,84 +1,67 @@
 package com.app.todos.resources.repository.Todos;
 
-import com.app.todos.domain.metrics.dtos.MetricsQntByPriorDto;
-import com.app.todos.domain.metrics.dtos.MetricsQntByStatResponseDto;
+import com.app.todos.domain.metrics.dtos.MetricsNumbersResponseDto;
 import com.app.todos.domain.todos.Todo;
-import org.hibernate.type.descriptor.jdbc.SmallIntJdbcType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
 
     @Query(nativeQuery = true, value =
-            "SELECT t.* FROM Todos t " +
-            "WHERE(t.user_id = :user_id) " +
+            "SELECT t.* FROM Todos t WHERE t.user_id = :user_id " +
             "AND (:query IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
             "AND (:query IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "AND (:client IS NULL OR LOWER(t.client) LIKE LOWER(CONCAT('%', :client, '%'))) " +
             "AND (:status IS NULL OR t.status = :status) " +
+            "AND (:priority IS NULL OR t.priority = :priority) " +
+            "AND (t.creation >= :from) " +
+            "AND (t.creation <= :to) " +
+            "AND (t.due <= :due)" +
             "ORDER BY t.id ASC;")
     Page<Todo> getUserTodos(
         @Param("user_id") BigInteger user_id,
         @Param("query") String query,
+        @Param("client") String client,
         // status: 0 = pending, 1 = in progress, 2 = done
         @Param("status") Integer status,
+        // priority: 0 = low, 1 = medium, 2 = high
+        @Param("priority") Integer priority,
+        @Param("from") LocalDate from,
+        @Param("to") LocalDate to,
+        @Param("due") LocalDate due,
         Pageable pageable
     );
 
-    @Query(nativeQuery = true, value =
-            "SELECT t.* FROM Todos t WHERE t.user_id = :user_id " +
-            "AND (:query IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
-            "AND (:query IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
-            "AND (:status IS NULL OR t.status = :status) " +
-            "AND (t.creation >= :from) " +
-            "AND (t.creation <= :to) " +
-            "ORDER BY t.id ASC;")
-    List<Todo> massiveQuery(
-            @Param("user_id") BigInteger user_id,
-            @Param("query") String query,
-            // status: 0 = pending, 1 = in progress, 2 = done
-            @Param("status") Integer status,
-            @Param("from") LocalDate from,
-            @Param("to") LocalDate to
-    );
-
-    @Query(nativeQuery = true, value = "SELECT t.* FROM Todos t " +
-            "WHERE t.user_id = :userId " +
-            "AND (t.creation >= :from) " +
-            "AND (t.creation <= :to);")
-    List<Todo> findAllByUserId(
-            @Param("userId") BigInteger userId,
-            @Param("from") LocalDate from,
-            @Param("to") LocalDate to
-    );
-
     @Query(nativeQuery = true, value = """
-            SELECT COUNT(CASE WHEN t.status = 0 THEN 1 END) AS pending,
+            SELECT COUNT(*) AS total,\s
+            COUNT(CASE WHEN t.status = 0 THEN 1 END) AS pending,\s
             COUNT(CASE WHEN t.status = 1 THEN 1 END) AS inProgress,
             COUNT(CASE WHEN t.status = 2 THEN 1 END) AS done,
-            COUNT(*) AS total\s
-            FROM todos t
-            WHERE t.user_id = :user_id\s
-            AND (t.creation >= :from)\s
+            COUNT(CASE WHEN t.priority = 0 THEN 1 END) AS low,
+            COUNT(CASE WHEN t.priority = 1 THEN 1 END) AS medium,
+            COUNT(CASE WHEN t.priority = 2 THEN 1 END) AS high,
+            COUNT(CASE WHEN t.due < NOW() THEN 1 END) AS overdue,
+            COUNT(CASE WHEN t.due > NOW() THEN 1 END) AS future,
+            CASE\s
+                WHEN COUNT(*) = 0 THEN 0
+                ELSE ROUND(COUNT(CASE WHEN t.status = 2 THEN 1 END) * 1.0 / COUNT(*), 2)
+            END AS completion_rate
+            FROM todos t WHERE t.user_id = :user_id
+            AND (:client IS NULL OR LOWER(t.client) LIKE LOWER(CONCAT('%', :client, '%')))
+            AND (t.creation >= :from)
             AND (t.creation <= :to);""")
-    Map<String, Long> findQuantityByStatus(
+    Map<String, BigDecimal> metricsQuery(
             @Param("user_id") BigInteger user_id,
+            @Param("client") String client,
             @Param("from") LocalDate from,
             @Param("to") LocalDate to
     );
-
-    @Query(nativeQuery = true, value = """
-            SELECT COUNT(CASE WHEN t.priority = 0 THEN 1 END) AS high,
-            COUNT(CASE WHEN t.priority = 1 THEN 1 END) AS medium,
-            COUNT(CASE WHEN t.priority = 2 THEN 1 END) AS low
-            FROM todos t
-            WHERE t.user_id = :user_id;""")
-    Map<String, Long> findQuantityByPriority(BigInteger user_id);
 }

@@ -10,12 +10,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -41,13 +43,30 @@ public class TodosController {
             @RequestParam("page") @DefaultValue("0") int page,
             @RequestParam("size") @DefaultValue("10") int size,
             @RequestParam("query") @Nullable String query,
+            @RequestParam("client") @Nullable String client,
             @RequestParam("status") @Nullable String status,
+            @RequestParam("priority") @Nullable String priority,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  to,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  due,
             @PathVariable BigInteger user_id,
             @RequestHeader Map<String, String> headers
     ) {
         if (size <= 0) size = 10;
         String token = headers.get("authorization").replace("Bearer ", "");
-        TodosPageResponseDto todoList = todosService.getAll(user_id, token, query, status, page, size);
+        TodosPageResponseDto todoList = todosService.getAll(
+            user_id,
+            token,
+            query,
+            client,
+            status,
+            priority,
+            from,
+            to,
+            due,
+            page,
+            size
+        );
         return ResponseEntity.ok(todoList);
     }
 
