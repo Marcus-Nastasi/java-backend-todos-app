@@ -53,10 +53,9 @@ public class TodosController {
             @RequestHeader Map<String, String> headers
     ) {
         if (size <= 0) size = 10;
-        String token = headers.get("authorization").replace("Bearer ", "");
         TodosPageResponseDto todoList = todosService.getAll(
             user_id,
-            token,
+            headers.get("authorization").replace("Bearer ", ""),
             query,
             client,
             status,

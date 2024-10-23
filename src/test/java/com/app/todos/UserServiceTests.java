@@ -6,7 +6,6 @@ import com.app.todos.domain.users.User;
 import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.application.service.auth.TokenService;
 import com.app.todos.application.service.users.UserService;
-import com.app.todos.web.handler.exception.ForbiddenException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -89,7 +88,11 @@ public class UserServiceTests {
         when(tokenService.validate(token)).thenReturn(user.getEmail());
 
         assertEquals(user, userService.delete(BigInteger.valueOf(1005), token));
-        assertEquals(user.getEmail(), userService.delete(BigInteger.valueOf(1005), token).getEmail());
+        assertEquals(
+            user.getEmail(),
+            userService.delete(BigInteger.valueOf(1005), token)
+                .getEmail()
+        );
         assertDoesNotThrow(() -> {
             userService.delete(BigInteger.valueOf(1005), token);
         });

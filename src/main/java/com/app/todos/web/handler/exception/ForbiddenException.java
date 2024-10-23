@@ -1,7 +1,5 @@
 package com.app.todos.web.handler.exception;
 
-import org.springframework.web.bind.annotation.ControllerAdvice;
-
 import java.io.Serial;
 
 public class ForbiddenException extends RuntimeException {

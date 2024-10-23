@@ -24,10 +24,6 @@ public class TodosService {
     @Autowired
     private TodosRepo todosRepo;
     @Autowired
-    private TokenService tokenService;
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
     private UserService userService;
 
     public TodosPageResponseDto getAll(

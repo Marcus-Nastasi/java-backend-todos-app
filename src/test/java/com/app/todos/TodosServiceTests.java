@@ -14,7 +14,6 @@ import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.application.service.auth.TokenService;
 import com.app.todos.application.service.todos.TodosService;
 import com.app.todos.web.handler.exception.ForbiddenException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

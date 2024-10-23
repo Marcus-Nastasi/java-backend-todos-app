@@ -29,10 +29,9 @@ public class MetricsController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  to,
             @RequestHeader Map<String, String> headers
     ) {
-        String token = headers.get("authorization").replace("Bearer ", "");
         MetricsNumbersResponseDto todoList = metricService.get(
             user_id,
-            token,
+            headers.get("authorization").replace("Bearer ", ""),
             client,
             from,
             to

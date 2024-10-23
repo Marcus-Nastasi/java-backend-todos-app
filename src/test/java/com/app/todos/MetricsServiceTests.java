@@ -1,15 +1,10 @@
 package com.app.todos;
 
-import com.app.todos.application.service.auth.TokenService;
 import com.app.todos.application.service.metrics.MetricService;
-import com.app.todos.application.service.todos.TodosService;
 import com.app.todos.application.service.users.UserService;
 import com.app.todos.domain.metrics.dtos.MetricsNumbersResponseDto;
-import com.app.todos.domain.todos.Todo;
 import com.app.todos.domain.users.User;
-import com.app.todos.resources.enums.todos.Priority;
 import com.app.todos.resources.repository.Todos.TodosRepo;
-import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.web.handler.exception.ForbiddenException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
