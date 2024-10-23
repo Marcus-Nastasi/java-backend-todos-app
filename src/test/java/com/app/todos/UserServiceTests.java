@@ -6,6 +6,7 @@ import com.app.todos.domain.users.User;
 import com.app.todos.resources.repository.User.UserRepo;
 import com.app.todos.application.service.auth.TokenService;
 import com.app.todos.application.service.users.UserService;
+import com.app.todos.web.handler.exception.ForbiddenException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,44 +37,65 @@ public class UserServiceTests {
     User user = new User("Brian", "brian@gmail.com", "12345");
     UserRequestDTO userRequestDTO = new UserRequestDTO("Brian", "brian@gmail.com", "12345");
     UserUpdateDTO userUpdateDTO = new UserUpdateDTO("New Brian", "new email", "12345", "new pass");
+    String token = "token";
 
     @Test
     void getUser() {
-        String token = "token";
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
+
         User getFunction = userService.get(BigInteger.valueOf(2000), token);
-        assertDoesNotThrow(() -> getFunction);
+
         assertEquals(getFunction, user);
+        assertEquals(getFunction.getEmail(), user.getEmail());
+        assertDoesNotThrow(() -> getFunction);
+
+        verify(userRepo, times(1)).findById(any(BigInteger.class));
+        verify(tokenService, times(1)).validate(any(String.class));
     }
 
     @Test
     void newUserTest() {
         when(userRepo.save(any(User.class))).thenReturn(user);
+
+        assertEquals(user.getEmail(), userService.newUser(userRequestDTO).getEmail());
         assertDoesNotThrow(() -> {
             userService.newUser(userRequestDTO);
         });
+
+        verify(userRepo, times(2)).save(any(User.class));
     }
 
     @Test
     void update() {
-        String token = "token";
-        when(userRepo.save(any(User.class))).thenReturn(user);
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
-        when(passwordEncoder.matches(userUpdateDTO.currentPassword(), user.getPassword())).thenReturn(true);
+        when(passwordEncoder.matches(userUpdateDTO.currentPassword(), user.getPassword()))
+            .thenReturn(true);
+        when(userRepo.save(any(User.class))).thenReturn(user);
+
         assertDoesNotThrow(() -> {
             userService.update(BigInteger.valueOf(2500), userUpdateDTO, token);
         });
+
+        verify(userRepo, times(1)).findById(any(BigInteger.class));
+        verify(tokenService, times(1)).validate(any(String.class));
+        verify(userRepo, times(1)).save(any(User.class));
     }
 
     @Test
     void deleteUser() {
-        String token = "token";
         when(userRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(user));
         when(tokenService.validate(token)).thenReturn(user.getEmail());
+
+        assertEquals(user, userService.delete(BigInteger.valueOf(1005), token));
+        assertEquals(user.getEmail(), userService.delete(BigInteger.valueOf(1005), token).getEmail());
         assertDoesNotThrow(() -> {
             userService.delete(BigInteger.valueOf(1005), token);
         });
+
+        verify(userRepo, times(3)).findById(any(BigInteger.class));
+        verify(tokenService, times(3)).validate(any(String.class));
+        verify(userRepo, times(3)).deleteById(any(BigInteger.class));
     }
 }
