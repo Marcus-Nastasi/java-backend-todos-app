@@ -33,18 +33,10 @@ public class MetricsServiceTests {
     @Mock
     private TodosRepo todosRepo;
     @Mock
-    private UserRepo userRepo;
-    @Mock
-    private TokenService tokenService;
-    @Mock
-    private TodosService todosService;
-    @Mock
     private UserService userService;
     @InjectMocks
     private MetricService metricService;
 
-    Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 2, 15), Priority.HIGH);
-    Todo todo2 = new Todo(BigInteger.valueOf(1600), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 7, 15), Priority.LOW);
     User user = new User("Brian", "bian@gmail.com", "12345");
     String token = "Token";
     String falseToken = "Token False";
@@ -55,7 +47,8 @@ public class MetricsServiceTests {
             1L, 1L, 0L, 0L, 1L, 0L, 0L, 0L, 0L, BigDecimal.valueOf(0.77)
         );
 
-        when(userService.validateUserToken(any(BigInteger.class), any(String.class))).thenReturn(user);
+        when(userService.validateUserToken(any(BigInteger.class), any(String.class)))
+            .thenReturn(user);
         when(todosRepo.metricsQuery(
             BigInteger.valueOf(1), "query", LocalDate.of(2024, 1, 15), LocalDate.now()
         )).thenReturn(Map.of(

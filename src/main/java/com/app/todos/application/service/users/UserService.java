@@ -56,7 +56,7 @@ public class UserService {
         ) {
             throw new AppException("name, email or password cannot be null");
         }
-        User u = this.get(id, token);
+        User u = this.validateUserToken(id, token);
         if (!passwordEncoder.matches(data.currentPassword(), u.getPassword()))
             throw new ForbiddenException("Invalid password");
         String encoded = passwordEncoder.encode(data.newPassword());
@@ -68,7 +68,7 @@ public class UserService {
     }
 
     public User delete(BigInteger id, String token) {
-        User u = this.get(id, token);
+        User u = this.validateUserToken(id, token);
         userRepo.deleteById(id);
         return u;
     }
