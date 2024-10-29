@@ -40,7 +40,7 @@ public class TokenFilter extends OncePerRequestFilter {
     }
 
     private String recover(HttpServletRequest request) {
-        var headers = request.getHeader("Authorization");
+        String headers = request.getHeader("Authorization");
         if (headers == null) return null;
         return headers.replace("Bearer ", "");
     }

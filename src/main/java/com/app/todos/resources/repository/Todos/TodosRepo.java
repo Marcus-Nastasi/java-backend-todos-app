@@ -16,15 +16,15 @@ public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
 
     @Query(nativeQuery = true, value =
             "SELECT t.* FROM Todos t WHERE t.user_id = :user_id " +
-            "AND (:query IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
-            "AND (:query IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "AND ((:query IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "OR (:query IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :query, '%')))) " +
             "AND (:client IS NULL OR LOWER(t.client) LIKE LOWER(CONCAT('%', :client, '%'))) " +
             "AND (:status IS NULL OR t.status = :status) " +
             "AND (:priority IS NULL OR t.priority = :priority) " +
             "AND (t.creation >= :from) " +
             "AND (t.creation <= :to) " +
-            "AND (t.due <= :due)" +
-            "ORDER BY t.id ASC;")
+            "AND (t.due <= :due) " +
+            "GROUP BY t.id ORDER BY t.id ASC;")
     Page<Todo> getUserTodos(
         @Param("user_id") BigInteger user_id,
         @Param("query") String query,

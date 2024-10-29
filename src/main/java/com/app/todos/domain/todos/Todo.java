@@ -49,18 +49,20 @@ public class Todo {
             String title,
             String description,
             String link,
+            LocalDate creation,
             LocalDate due,
-            Priority priority
+            Priority priority,
+            LocalDate last_updated
     ) {
         this.user_id = user_id;
         this.client = client;
         this.title = title;
         this.description = description;
         this.link = link;
-        this.creation = LocalDate.now();
+        this.creation = creation;
         this.due = due;
         this.status = Status.PENDING;
         this.priority = priority;
-        this.last_updated = LocalDate.now();
+        this.last_updated = last_updated;
     }
 }

@@ -8,8 +8,6 @@ import com.app.todos.domain.todos.DTOs.TodosUpdateDTO;
 import com.app.todos.domain.todos.Todo;
 import com.app.todos.web.handler.exception.AppException;
 import com.app.todos.resources.repository.Todos.TodosRepo;
-import com.app.todos.resources.repository.User.UserRepo;
-import com.app.todos.application.service.auth.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -48,8 +46,8 @@ public class TodosService {
             client,
             status != null && !status.isEmpty() ? Integer.parseInt(status) : null,
             priority != null && !priority.isEmpty() ? Integer.parseInt(priority) : null,
-            from != null ? from : LocalDate.of(1900, 1, 1),
-            to != null ? to : LocalDate.now(),
+            from != null ? from : LocalDate.of(1000, 1, 1),
+            to != null ? to : LocalDate.of(2500, 1, 1),
             due != null ? due : LocalDate.of(2500, 1, 1),
             PageRequest.of(page, size)
         );
@@ -71,8 +69,10 @@ public class TodosService {
             data.title(),
             data.description(),
             data.link(),
+            LocalDate.now(),
             data.due(),
-            data.priority()
+            data.priority(),
+            LocalDate.now()
         );
         todosRepo.save(t);
         return t;
