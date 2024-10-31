@@ -6,12 +6,12 @@ import com.app.todos.domain.users.User;
 import com.app.todos.application.service.users.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.Map;
 
 @RestController
@@ -36,7 +36,9 @@ public class UserController {
             @RequestBody @Validated UserRequestDTO data
     ) {
         User u = userService.newUser(data);
-        return ResponseEntity.status(HttpStatus.CREATED).body(u);
+        return ResponseEntity
+            .created(URI.create("/" + u.getId()))
+            .body(u);
     }
 
     @PatchMapping(value = "/update/{id}")
@@ -47,7 +49,7 @@ public class UserController {
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
         User u = userService.update(id, data, token);
-        return ResponseEntity.accepted().body(u);
+        return ResponseEntity.ok(u);
     }
 
     @DeleteMapping(value = "/delete/{id}")
@@ -57,6 +59,6 @@ public class UserController {
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
         User u = userService.delete(id, token);
-        return ResponseEntity.accepted().body(u);
+        return ResponseEntity.ok(u);
     }
 }
