@@ -1,30 +1,30 @@
-# Etapa de build
+# build fase
 FROM maven:3.9-eclipse-temurin-21 AS build
 
-# Define o diretório de trabalho
+# Define workdir
 WORKDIR /app
 
-# Copia o arquivo pom.xml e as dependências para o cache
+# Copy pom.xml file and dependencies to cache
 COPY pom.xml ./
 RUN mvn dependency:go-offline
 
-# Copia o código-fonte do projeto para o diretório de trabalho
+# Copy source-code to workdir
 COPY src ./src
 
-# Compila o projeto e cria o JAR final
+# Project copile and create final JAR
 RUN mvn clean package -DskipTests
 
-# Etapa final
+# Final
 FROM openjdk:21-oracle
 
-# Define o diretório de trabalho
+# Define workdir
 WORKDIR /app
 
-# Copia o JAR gerado na etapa de build para o diretório de trabalho
+# Copy the generated JAR to workdir
 COPY --from=build /app/target/todos-0.0.1-SNAPSHOT.jar /app/todos-0.0.1-SNAPSHOT.jar
 
-# Expõe a porta
+# Expose port
 EXPOSE 8080
 
-# Define o comando de entrada
+# Define entry point command
 ENTRYPOINT ["java", "-jar", "/app/todos-0.0.1-SNAPSHOT.jar"]
