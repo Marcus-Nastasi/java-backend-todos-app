@@ -40,14 +40,14 @@ Additionally, the API is documented with Swagger API to make the available route
 
 Follow the steps below to set up and run the project on your local machine.
 
-### Prerequisites
+## Prerequisites
 
 - Git
 - Node.js and npm (for front-end)
 - java 21 (JDK) e Maven
 - Docker and Docker Compose
 
-### Steps
+## Steps
 
 **Make sure you have opened the ports 8080, 3000 and 5432 on your machine locally**
 
