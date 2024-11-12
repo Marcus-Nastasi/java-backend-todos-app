@@ -71,9 +71,11 @@ Follow the steps below to set up and run the project on your local machine.
    
    spring.jpa.hibernate.ddl-auto=update
 
-  2. **Clone front-end repo on the same folder, with the name 'todos-front':**
-     ```bash
-     git clone https://github.com/Marcus-Nastasi/to-dos-app-v2.git
+  
+
+2. **Clone front-end repo on the same folder, with the name 'todos-front':**
+   ```bash
+   git clone https://github.com/Marcus-Nastasi/to-dos-app-v2.git
    
 3. **On the root folder, create a 'docker' folder, and create the docker-compose.yml file:**
     ```yml
