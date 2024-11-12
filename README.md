@@ -127,11 +127,11 @@ Follow the steps below to set up and run the project on your local machine.
 7. **Once you've built the images for the first time, you can create in the root folder of your computer's user, this bash script to run or stop the app easily (make sure you write your own information on [ ] marked fields):**
     ```bash
     usage() {
-        echo "Uso: $0 --s"
+        echo "Uso: $0 --q"
         exit 1
     }
     
-    if [ "$1" == "--s" ]; then
+    if [ "$1" == "--q" ]; then
         action="stop"
     else
         action="start"
@@ -162,7 +162,7 @@ Follow the steps below to set up and run the project on your local machine.
 
 9. **From your root dir you can stop the app just by running:**
     ```bash
-    . [bash_file_name].sh --s
+    . [bash_file_name].sh --q
 
 ## Unit tests
 
