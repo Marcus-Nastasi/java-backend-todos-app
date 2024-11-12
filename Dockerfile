@@ -1,4 +1,4 @@
-# build fase
+# build phase
 FROM maven:3.9-eclipse-temurin-21 AS build
 
 # Define workdir
@@ -14,7 +14,7 @@ COPY src ./src
 # Project copile and create final JAR
 RUN mvn clean package -DskipTests
 
-# Final
+# Final phase
 FROM openjdk:21-oracle
 
 # Define workdir

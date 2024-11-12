@@ -20,7 +20,7 @@ public class MetricService {
     private UserService userService;
 
     /*
-        DONE 1. Tarefas por Prioridade:
+        GRAPH DONE 1. Tarefas por Prioridade:
         Quantidade de tarefas categorizadas por prioridade (Alta, Média, Baixa).
 
         DONE 2. Tarefas por Data de Criação ou Conclusão:
@@ -28,7 +28,7 @@ public class MetricService {
         Gráfico sugerido: Gráfico de linha ou gráfico de área para mostrar o volume de tarefas ao longo de dias,
         semanas ou meses.
 
-        DONE 4. Tarefas Atrasadas:
+        GRAPH DONE 4. Tarefas Atrasadas:
         Quantidade de tarefas cuja data de conclusão ultrapassou o prazo (overdue).
         Gráfico sugerido: Gráfico de barras comparando tarefas no prazo e tarefas atrasadas.
 
