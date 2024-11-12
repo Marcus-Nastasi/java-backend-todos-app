@@ -66,9 +66,10 @@ Follow the steps below to set up and run the project on your local machine.
    spring.datasource.driver-class-name=org.postgresql.Driver
    spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
    
-   # Hibernate properties
+   # Security config
    spring.security.token.secret = [your_token_secret].
-   
+  
+   # Hibernate properties 
    spring.jpa.hibernate.ddl-auto=update
 
 2. **Clone front-end repo on the same folder, with the name 'todos-front':**
