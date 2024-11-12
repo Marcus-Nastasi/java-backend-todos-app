@@ -124,7 +124,7 @@ Follow the steps below to set up and run the project on your local machine.
    ```bash
     http://localhost:8080/swagger-ui/index.html
    
-7. **Once you've built the images for the first time, you can create in the root folder of your computer's user, this bash script to run or stop the app easily (make sure you write your own information on [] marked fields):**
+7. **Once you've built the images for the first time, you can create in the root folder of your computer's user, this bash script to run or stop the app easily (make sure you write your own information on [ ] marked fields):**
     ```bash
     usage() {
         echo "Uso: $0 --s"
