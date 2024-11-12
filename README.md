@@ -59,18 +59,17 @@ Follow the steps below to set up and run the project on your local machine.
    ```bash
    spring.application.name=todos
 
+   # Hibernate properties 
    spring.jpa.hibernate.show-sql=true
    spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
    spring.datasource.username=postgres
    spring.datasource.password=123
    spring.datasource.driver-class-name=org.postgresql.Driver
    spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+   spring.jpa.hibernate.ddl-auto=update
    
    # Security config
    spring.security.token.secret = [your_token_secret].
-  
-   # Hibernate properties 
-   spring.jpa.hibernate.ddl-auto=update
 
 2. **Clone front-end repo on the same folder, with the name 'todos-front':**
    ```bash
