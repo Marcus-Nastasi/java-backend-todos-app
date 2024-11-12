@@ -55,7 +55,7 @@ Follow the steps below to set up and run the project on your local machine.
    ```bash
    git clone https://github.com/Marcus-Nastasi/java-backend-todos-app.git
 
-- **Configure the 'application.properties' file:**
+- **Configure the 'application.properties' file on '/src/main/resources':**
    ```bash
    spring.application.name=todos
 
