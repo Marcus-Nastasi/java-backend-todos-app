@@ -75,7 +75,7 @@ Follow the steps below to set up and run the project on your local machine.
    ```bash
    git clone https://github.com/Marcus-Nastasi/to-dos-app-v2.git
    
-3. **On the root folder, create a 'docker' folder, and create the docker-compose.yml file:
+3. **On the root folder, create a 'docker' folder, and create the docker-compose.yml file:**
     ```yml
     version: '3.8'
 
