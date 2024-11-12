@@ -154,7 +154,7 @@ Follow the steps below to set up and run the project on your local machine.
         echo "${access}"
     fi
     
-    cd [/your/path/to/user's/root/]
+    cd [/your/path/to/user/root/]
 
 8. **Once created the bash script, from your root dir you can start the app just by running:**
     ```bash
