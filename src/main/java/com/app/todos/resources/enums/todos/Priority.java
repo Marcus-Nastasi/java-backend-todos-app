@@ -1,5 +1,8 @@
 package com.app.todos.resources.enums.todos;
 
+import lombok.Getter;
+
+@Getter
 public enum Priority {
 
     LOW("low"), MEDIUM("medium"), HIGH("high");
@@ -8,9 +11,5 @@ public enum Priority {
 
     Priority(String priority) {
         Priority = priority;
-    }
-
-    public String getPriority() {
-        return Priority;
     }
 }

@@ -47,8 +47,8 @@ public interface TodosRepo extends JpaRepository<Todo, BigInteger> {
             COUNT(CASE WHEN t.priority = 0 THEN 1 END) AS low,
             COUNT(CASE WHEN t.priority = 1 THEN 1 END) AS medium,
             COUNT(CASE WHEN t.priority = 2 THEN 1 END) AS high,
-            COUNT(CASE WHEN t.due < NOW() THEN 1 END) AS overdue,
-            COUNT(CASE WHEN t.due > NOW() THEN 1 END) AS future,
+            COUNT(CASE WHEN t.due < NOW() AND t.status != 2 THEN 1 END) AS overdue,
+            COUNT(CASE WHEN t.due > NOW() AND t.status != 2 THEN 1 END) AS future,
             CASE\s
                 WHEN COUNT(*) = 0 THEN 0
                 ELSE ROUND(COUNT(CASE WHEN t.status = 2 THEN 1 END) * 1.0 / COUNT(*), 2)
