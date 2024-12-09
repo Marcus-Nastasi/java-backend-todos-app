@@ -1,64 +1,25 @@
 package com.app.todos.domain.todos;
 
-import com.app.todos.resources.enums.todos.Priority;
-import com.app.todos.resources.enums.todos.Status;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "todos")
-@Getter
-@Setter
-@NoArgsConstructor
-public class Todo implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", columnDefinition = "bigint")
+public class Todo {
     private BigInteger id;
-    @Column
     private BigInteger user_id;
-    @Column
     private String client;
-    @Column
     private String title;
-    @Column
     private String description;
-    @Column
     private String link;
-    @Column
     private LocalDate creation;
-    @Column
     private LocalDate due;
-    @Column
-    @Enumerated(value = EnumType.ORDINAL)
     private Status status;
-    @Column
-    @Enumerated(value = EnumType.ORDINAL)
     private Priority priority;
-    @Column(name = "last_updated")
     private LocalDate last_updated;
 
-    public Todo(
-            BigInteger user_id,
-            String client,
-            String title,
-            String description,
-            String link,
-            LocalDate creation,
-            LocalDate due,
-            Priority priority,
-            LocalDate last_updated
-    ) {
+    public Todo() {}
+
+    public Todo(BigInteger id, BigInteger user_id, String client, String title, String description, String link, LocalDate creation, LocalDate due, Status status, Priority priority, LocalDate last_updated) {
+        this.id = id;
         this.user_id = user_id;
         this.client = client;
         this.title = title;
@@ -66,8 +27,96 @@ public class Todo implements Serializable {
         this.link = link;
         this.creation = creation;
         this.due = due;
-        this.status = Status.PENDING;
+        this.status = status;
         this.priority = priority;
+        this.last_updated = last_updated;
+    }
+
+    public BigInteger getId() {
+        return id;
+    }
+
+    public void setId(BigInteger id) {
+        this.id = id;
+    }
+
+    public BigInteger getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(BigInteger user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public LocalDate getCreation() {
+        return creation;
+    }
+
+    public void setCreation(LocalDate creation) {
+        this.creation = creation;
+    }
+
+    public LocalDate getDue() {
+        return due;
+    }
+
+    public void setDue(LocalDate due) {
+        this.due = due;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public LocalDate getLast_updated() {
+        return last_updated;
+    }
+
+    public void setLast_updated(LocalDate last_updated) {
         this.last_updated = last_updated;
     }
 }

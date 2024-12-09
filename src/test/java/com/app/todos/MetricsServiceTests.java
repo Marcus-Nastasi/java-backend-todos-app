@@ -1,11 +1,11 @@
 package com.app.todos;
 
-import com.app.todos.application.service.metrics.MetricService;
-import com.app.todos.application.service.users.UserService;
-import com.app.todos.domain.metrics.dtos.MetricsNumbersResponseDto;
-import com.app.todos.domain.users.User;
-import com.app.todos.resources.repository.Todos.TodosRepo;
-import com.app.todos.web.handler.exception.ForbiddenException;
+import com.app.todos.application.usecases.metrics.MetricService;
+import com.app.todos.application.usecases.users.UserUseCase;
+import com.app.todos.adapters.output.metrics.MetricsNumbersResponseDto;
+import com.app.todos.infrastructure.entity.users.UserEntity;
+import com.app.todos.infrastructure.persistence.todos.TodosRepo;
+import com.app.todos.application.exception.ForbiddenException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,11 +28,11 @@ public class MetricsServiceTests {
     @Mock
     private TodosRepo todosRepo;
     @Mock
-    private UserService userService;
+    private UserUseCase userService;
     @InjectMocks
     private MetricService metricService;
 
-    User user = new User("Brian", "bian@gmail.com", "12345");
+    UserEntity user = new UserEntity("Brian", "bian@gmail.com", "12345");
     String token = "Token";
     String falseToken = "Token False";
 

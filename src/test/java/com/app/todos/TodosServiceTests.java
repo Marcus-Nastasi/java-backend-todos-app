@@ -1,19 +1,19 @@
 package com.app.todos;
 
-import com.app.todos.application.service.users.UserService;
-import com.app.todos.domain.todos.DTOs.TodosPageResponseDto;
-import com.app.todos.domain.todos.DTOs.TodosRequestDTO;
-import com.app.todos.domain.todos.DTOs.TodosStatusDTO;
-import com.app.todos.domain.todos.DTOs.TodosUpdateDTO;
-import com.app.todos.resources.enums.todos.Priority;
-import com.app.todos.resources.enums.todos.Status;
-import com.app.todos.domain.todos.Todo;
-import com.app.todos.domain.users.User;
-import com.app.todos.resources.repository.Todos.TodosRepo;
-import com.app.todos.resources.repository.User.UserRepo;
-import com.app.todos.application.service.auth.TokenService;
-import com.app.todos.application.service.todos.TodosService;
-import com.app.todos.web.handler.exception.ForbiddenException;
+import com.app.todos.application.usecases.users.UserUseCase;
+import com.app.todos.adapters.output.todos.TodosPageResponseDto;
+import com.app.todos.adapters.input.todos.TodosRequestDTO;
+import com.app.todos.adapters.input.todos.TodosStatusDTO;
+import com.app.todos.adapters.input.todos.TodosUpdateDTO;
+import com.app.todos.domain.todos.Priority;
+import com.app.todos.domain.todos.Status;
+import com.app.todos.infrastructure.entity.todos.TodoEntity;
+import com.app.todos.infrastructure.entity.users.UserEntity;
+import com.app.todos.infrastructure.persistence.todos.TodosRepo;
+import com.app.todos.infrastructure.persistence.users.UserRepo;
+import com.app.todos.infrastructure.gateway.auth.TokenService;
+import com.app.todos.application.usecases.todos.TodosService;
+import com.app.todos.application.exception.ForbiddenException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,16 +45,16 @@ public class TodosServiceTests {
     @Mock
     private TokenService tokenService;
     @Mock
-    private UserService userService;
+    private UserUseCase userService;
     @InjectMocks
     private TodosService todosService;
 
-    Todo todo = new Todo(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Priority.HIGH, LocalDate.now());
-    Todo todo2 = new Todo(BigInteger.valueOf(1600), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Priority.LOW, LocalDate.now());
-    User user = new User("Brian", "bian@gmail.com", "12345");
+    TodoEntity todo = new TodoEntity(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Priority.HIGH, LocalDate.now());
+    TodoEntity todo2 = new TodoEntity(BigInteger.valueOf(1600), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Priority.LOW, LocalDate.now());
+    UserEntity user = new UserEntity("Brian", "bian@gmail.com", "12345");
     TodosRequestDTO todoDTO = new TodosRequestDTO(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 7, 15), Priority.HIGH);
     TodosUpdateDTO todoUpdateDTO = new TodosUpdateDTO("Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.of(2024, 7, 15), Priority.HIGH);
-    List<Todo> todos = new ArrayList<>();
+    List<TodoEntity> todos = new ArrayList<>();
     String token = "Token";
     String falseToken = "Token False";
 
@@ -85,7 +85,7 @@ public class TodosServiceTests {
     void getAll() {
         todos.add(todo);
         todos.add(todo2);
-        Page<Todo> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
+        Page<TodoEntity> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
         TodosPageResponseDto todosPageResponseDto = new TodosPageResponseDto(
             todoPage.getPageable().getPageNumber(),
             todoPage.getPageable().getPageSize(),
@@ -187,7 +187,7 @@ public class TodosServiceTests {
         todo2.setStatus(Status.DONE);
         todos.add(todo);
         todos.add(todo2);
-        Page<Todo> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
+        Page<TodoEntity> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
         TodosPageResponseDto todosPageResponseDto = new TodosPageResponseDto(
             todoPage.getPageable().getPageNumber(),
             todoPage.getPageable().getPageSize(),
@@ -292,7 +292,7 @@ public class TodosServiceTests {
         todo2.setStatus(Status.PROGRESS);
         todos.add(todo);
         todos.add(todo2);
-        Page<Todo> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
+        Page<TodoEntity> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
         TodosPageResponseDto todosPageResponseDto = new TodosPageResponseDto(
             todoPage.getPageable().getPageNumber(),
             todoPage.getPageable().getPageSize(),
@@ -397,7 +397,7 @@ public class TodosServiceTests {
         todo2.setStatus(Status.PENDING);
         todos.add(todo);
         todos.add(todo2);
-        Page<Todo> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
+        Page<TodoEntity> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
         TodosPageResponseDto todosPageResponseDto = new TodosPageResponseDto(
             todoPage.getPageable().getPageNumber(),
             todoPage.getPageable().getPageSize(),
@@ -498,12 +498,12 @@ public class TodosServiceTests {
 
     @Test
     void newTodo() {
-        when(todosRepo.save(any(Todo.class))).thenReturn(todo);
+        when(todosRepo.save(any(TodoEntity.class))).thenReturn(todo);
 
         assertEquals(todo.getId(), todosService.newTodo(todoDTO).getId());
         assertDoesNotThrow(() -> todosService.newTodo(todoDTO));
 
-        verify(todosRepo, times(2)).save(any(Todo.class));
+        verify(todosRepo, times(2)).save(any(TodoEntity.class));
     }
 
     @Test
@@ -513,7 +513,7 @@ public class TodosServiceTests {
         when(userService.validateUserToken(any(BigInteger.class), eq(falseToken)))
             .thenThrow(ForbiddenException.class);
         when(todosRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(todo));
-        when(todosRepo.save(any(Todo.class))).thenReturn(todo);
+        when(todosRepo.save(any(TodoEntity.class))).thenReturn(todo);
 
         assertEquals(todo, todosService.update(BigInteger.valueOf(1500), todoUpdateDTO, token));
         assertEquals(
@@ -530,7 +530,7 @@ public class TodosServiceTests {
 
         verify(userService, times(4)).validateUserToken(any(BigInteger.class), any(String.class));
         verify(todosRepo, times(4)).findById(any(BigInteger.class));
-        verify(todosRepo, times(3)).save(any(Todo.class));
+        verify(todosRepo, times(3)).save(any(TodoEntity.class));
     }
 
     @Test
@@ -542,7 +542,7 @@ public class TodosServiceTests {
         when(userService.validateUserToken(any(BigInteger.class), eq(falseToken)))
                 .thenThrow(ForbiddenException.class);
         when(todosRepo.findById(any(BigInteger.class))).thenReturn(Optional.of(todo));
-        when(todosRepo.save(any(Todo.class))).thenReturn(todo);
+        when(todosRepo.save(any(TodoEntity.class))).thenReturn(todo);
 
         assertEquals(todo, todosService.updateStatus(BigInteger.valueOf(1500), statusDTO, token));
         assertEquals(
@@ -560,7 +560,7 @@ public class TodosServiceTests {
         verify(userService, times(4))
             .validateUserToken(any(BigInteger.class), any(String.class));
         verify(todosRepo, times(4)).findById(any(BigInteger.class));
-        verify(todosRepo, times(3)).save(any(Todo.class));
+        verify(todosRepo, times(3)).save(any(TodoEntity.class));
     }
 
     @Test
