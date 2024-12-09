@@ -1,18 +1,18 @@
 package com.app.todos.infrastructure.gateway.auth;
 
+import com.app.todos.application.exception.AppException;
+import com.app.todos.application.gateway.auth.TokenGateway;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-@Service
-public class TokenService {
+public class TokenProvider implements TokenGateway {
 
     @Value("${spring.security.token.secret}")
     private String secret;
@@ -27,7 +27,7 @@ public class TokenService {
                 .withExpiresAt(exp())
                 .sign(algorithm);
         } catch (JWTCreationException e) {
-            throw e;
+            throw new AppException(e.getMessage());
         }
     }
 
@@ -41,7 +41,7 @@ public class TokenService {
                 .verify(token)
                 .getSubject();
         } catch (JWTVerificationException e) {
-            throw e;
+            return "";
         }
     }
 

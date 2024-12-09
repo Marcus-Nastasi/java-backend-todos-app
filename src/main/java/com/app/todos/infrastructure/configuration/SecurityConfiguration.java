@@ -1,5 +1,7 @@
 package com.app.todos.infrastructure.configuration;
 
+import com.app.todos.application.gateway.auth.PasswordGateway;
+import com.app.todos.infrastructure.gateway.auth.PasswordImGateway;
 import com.app.todos.infrastructure.gateway.auth.TokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -54,6 +56,11 @@ public class SecurityConfiguration extends DelegatingWebMvcConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PasswordGateway passwordGateway() {
+        return new PasswordImGateway();
     }
 
     @Bean

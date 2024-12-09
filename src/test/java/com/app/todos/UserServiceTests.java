@@ -4,7 +4,7 @@ import com.app.todos.adapters.input.users.UserRequestDTO;
 import com.app.todos.adapters.input.users.UserUpdateDTO;
 import com.app.todos.infrastructure.entity.users.UserEntity;
 import com.app.todos.infrastructure.persistence.users.UserRepo;
-import com.app.todos.infrastructure.gateway.auth.TokenService;
+import com.app.todos.infrastructure.gateway.auth.TokenProvider;
 import com.app.todos.application.usecases.users.UserUseCase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,7 @@ public class UserServiceTests {
     @Mock
     private UserRepo userRepo;
     @Mock
-    private TokenService tokenService;
+    private TokenProvider tokenService;
     @Mock
     private PasswordEncoder passwordEncoder;
     @InjectMocks
@@ -57,9 +57,9 @@ public class UserServiceTests {
     void newUserTest() {
         when(userRepo.save(any(UserEntity.class))).thenReturn(user);
 
-        assertEquals(user.getEmail(), userService.newUser(userRequestDTO).getEmail());
+        assertEquals(user.getEmail(), userService.create(userRequestDTO).getEmail());
         assertDoesNotThrow(() -> {
-            userService.newUser(userRequestDTO);
+            userService.create(userRequestDTO);
         });
 
         verify(userRepo, times(2)).save(any(UserEntity.class));

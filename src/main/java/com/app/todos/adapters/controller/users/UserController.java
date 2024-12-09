@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping(value = "/register")
     public ResponseEntity<User> newUser(@RequestBody @Validated UserRequestDTO data) {
-        User u = userUseCase.newUser(userDtoMapper.mapFromRequest(data));
+        User u = userUseCase.create(userDtoMapper.mapFromRequest(data));
         return ResponseEntity.created(URI.create("/" + u.getId())).body(u);
     }
 

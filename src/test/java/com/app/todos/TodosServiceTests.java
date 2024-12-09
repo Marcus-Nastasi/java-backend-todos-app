@@ -11,7 +11,7 @@ import com.app.todos.infrastructure.entity.todos.TodoEntity;
 import com.app.todos.infrastructure.entity.users.UserEntity;
 import com.app.todos.infrastructure.persistence.todos.TodosRepo;
 import com.app.todos.infrastructure.persistence.users.UserRepo;
-import com.app.todos.infrastructure.gateway.auth.TokenService;
+import com.app.todos.infrastructure.gateway.auth.TokenProvider;
 import com.app.todos.application.usecases.todos.TodosUseCase;
 import com.app.todos.application.exception.ForbiddenException;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class TodosServiceTests {
     @Mock
     private UserRepo userRepo;
     @Mock
-    private TokenService tokenService;
+    private TokenProvider tokenService;
     @Mock
     private UserUseCase userService;
     @InjectMocks

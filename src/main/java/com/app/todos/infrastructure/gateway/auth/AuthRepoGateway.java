@@ -13,11 +13,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AuthRepoGateway implements AuthGateway {
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
-    private final TokenService tokenService;
+    private final TokenProvider tokenService;
     private final AuthenticationManager authenticationManager;
     private final UserEntityMapper userEntityMapper;
 
-    public AuthRepoGateway(PasswordEncoder passwordEncoder, UserRepo userRepo, TokenService tokenService, AuthenticationManager authenticationManager, UserEntityMapper userEntityMapper) {
+    public AuthRepoGateway(PasswordEncoder passwordEncoder, UserRepo userRepo, TokenProvider tokenService, AuthenticationManager authenticationManager, UserEntityMapper userEntityMapper) {
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.tokenService = tokenService;
