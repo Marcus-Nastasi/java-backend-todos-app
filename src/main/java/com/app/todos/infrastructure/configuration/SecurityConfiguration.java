@@ -38,9 +38,7 @@ public class SecurityConfiguration extends DelegatingWebMvcConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
                         .anyRequest().authenticated()
-                )
-                .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .build()
+                ).addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class).build()
         );
     }
 

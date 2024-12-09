@@ -1,8 +1,9 @@
 package com.app.todos.adapters.output.auth;
 
-import org.springframework.security.core.userdetails.UserDetails;
+
+import com.app.todos.domain.users.User;
 
 public record AuthResponseDTO(
         String token,
-        UserDetails user
+        User user
 ) {}

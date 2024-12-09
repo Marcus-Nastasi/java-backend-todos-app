@@ -9,8 +9,10 @@ import com.app.todos.infrastructure.persistence.todos.TodosRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Map;
 
 public class TodosRepoGateway implements TodosGateway {
 
@@ -63,5 +65,10 @@ public class TodosRepoGateway implements TodosGateway {
         Todo todo = this.get(id);
         todosRepo.deleteById(id);
         return todo;
+    }
+
+    @Override
+    public Map<String, BigDecimal> getMetrics(BigInteger user_id, String client, LocalDate from, LocalDate to) {
+        return todosRepo.metricsQuery(user_id, client, from, to);
     }
 }

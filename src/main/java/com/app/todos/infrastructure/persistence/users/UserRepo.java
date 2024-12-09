@@ -9,7 +9,7 @@ import java.math.BigInteger;
 
 public interface UserRepo extends JpaRepository<UserEntity, BigInteger> {
 
-    UserDetails findByEmail(String email);
+    UserEntity findByEmail(String email);
 
     @Query(nativeQuery = true, value = "SELECT * FROM users WHERE(email=?1)")
     UserEntity findByUsername(String user);

@@ -1,7 +1,6 @@
 package com.app.todos.adapters.controller.metrics;
 
 import com.app.todos.application.usecases.metrics.MetricUseCase;
-import com.app.todos.adapters.output.metrics.MetricsNumbersResponseDto;
 import com.app.todos.domain.metrics.MetricsResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.Nullable;

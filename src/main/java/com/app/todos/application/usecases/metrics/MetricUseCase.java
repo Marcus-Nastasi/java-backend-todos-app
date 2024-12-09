@@ -1,8 +1,8 @@
 package com.app.todos.application.usecases.metrics;
 
+import com.app.todos.application.gateway.todos.TodosGateway;
 import com.app.todos.application.usecases.users.UserUseCase;
 import com.app.todos.domain.metrics.MetricsResponse;
-import com.app.todos.infrastructure.persistence.todos.TodosRepo;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -10,11 +10,11 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public class MetricUseCase {
-    private final TodosRepo todosRepo;
+    private final TodosGateway todosGateway;
     private final UserUseCase userUseCase;
 
-    public MetricUseCase(TodosRepo todosRepo, UserUseCase userUseCase) {
-        this.todosRepo = todosRepo;
+    public MetricUseCase(TodosGateway todosGateway, UserUseCase userUseCase) {
+        this.todosGateway = todosGateway;
         this.userUseCase = userUseCase;
     }
 
@@ -65,7 +65,7 @@ public class MetricUseCase {
             LocalDate to
     ) {
         userUseCase.validateUserToken(user_id, token);
-        Map<String, BigDecimal> metricsMap = todosRepo.metricsQuery(
+        Map<String, BigDecimal> metricsMap = todosGateway.getMetrics(
             user_id,
             client,
             from != null ? from : LocalDate.of(1900, 1, 1),
