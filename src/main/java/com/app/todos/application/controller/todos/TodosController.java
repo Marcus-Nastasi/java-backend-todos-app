@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,17 +31,15 @@ public class TodosController {
     private TodosService todosService;
 
     @GetMapping(value = "/get/{id}")
-    public ResponseEntity<Todo> getSingle(
-            @PathVariable BigInteger id,
-            @RequestHeader Map<String, String> headers
-    ) {
+    @Cacheable("todos")
+    public Todo getSingle(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        Todo todo = todosService.get(id, token);
-        return ResponseEntity.ok(todo);
+        return todosService.get(id, token);
     }
 
     @GetMapping(value = "/all/{user_id}")
-    public ResponseEntity<TodosPageResponseDto> all(
+    @Cacheable("todos")
+    public TodosPageResponseDto all(
             @RequestParam("page") @DefaultValue("0") int page,
             @RequestParam("size") @DefaultValue("10") int size,
             @RequestParam("query") @Nullable String query,
@@ -66,13 +66,12 @@ public class TodosController {
             page,
             size
         );
-        return ResponseEntity.ok(todoList);
+        return todoList;
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<Todo> newTodo(
-            @RequestBody @Validated TodosRequestDTO data
-    ) {
+    @CacheEvict(value = "todos", allEntries = true)
+    public ResponseEntity<Todo> newTodo(@RequestBody @Validated TodosRequestDTO data) {
         Todo todo = todosService.newTodo(data);
         return ResponseEntity
             .created(URI.create("/api/todos/get/" + todo.getId()))
@@ -80,6 +79,7 @@ public class TodosController {
     }
 
     @PatchMapping(value = "/update/{id}")
+    @CacheEvict(value = "todos", allEntries = true)
     public ResponseEntity<Todo> update(
             @PathVariable BigInteger id,
             @RequestBody @Validated TodosUpdateDTO data,
@@ -91,6 +91,7 @@ public class TodosController {
     }
 
     @PatchMapping(value = "/update/status/{id}")
+    @CacheEvict(value = "todos", allEntries = true)
     public ResponseEntity<Todo> updateStatus(
             @PathVariable BigInteger id,
             @RequestBody TodosStatusDTO data,
@@ -102,10 +103,8 @@ public class TodosController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<Todo> delete(
-            @PathVariable BigInteger id,
-            @RequestHeader Map<String, String> headers
-    ) {
+    @CacheEvict(value = "todos", allEntries = true)
+    public ResponseEntity<Todo> delete(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
         String token = headers.get("authorization").replace("Bearer ", "");
         Todo todo = todosService.delete(id, token);
         return ResponseEntity.ok(todo);

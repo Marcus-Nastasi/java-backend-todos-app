@@ -2,6 +2,7 @@ package com.app.todos.domain.todos.DTOs;
 
 import com.app.todos.domain.todos.Todo;
 
+import java.io.Serializable;
 import java.util.List;
 
 public record TodosPageResponseDto(
@@ -9,4 +10,4 @@ public record TodosPageResponseDto(
         int per_page,
         int total,
         List<Todo> data
-) {}
+) implements Serializable {}
