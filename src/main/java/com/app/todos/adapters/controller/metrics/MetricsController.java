@@ -1,7 +1,8 @@
 package com.app.todos.adapters.controller.metrics;
 
-import com.app.todos.application.usecases.metrics.MetricService;
+import com.app.todos.application.usecases.metrics.MetricUseCase;
 import com.app.todos.adapters.output.metrics.MetricsNumbersResponseDto;
+import com.app.todos.domain.metrics.MetricsResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +20,17 @@ import java.util.Map;
 public class MetricsController {
 
     @Autowired
-    private MetricService metricService;
+    private MetricUseCase metricService;
 
     @GetMapping(value = "/all/{user_id}")
-    public ResponseEntity<MetricsNumbersResponseDto> all(
+    public ResponseEntity<MetricsResponse> all(
             @PathVariable BigInteger user_id,
             @RequestParam("client") @Nullable String client,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  to,
             @RequestHeader Map<String, String> headers
     ) {
-        MetricsNumbersResponseDto todoList = metricService.get(
+        MetricsResponse todoList = metricService.get(
             user_id,
             headers.get("authorization").replace("Bearer ", ""),
             client,

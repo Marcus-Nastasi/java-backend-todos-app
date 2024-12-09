@@ -3,6 +3,7 @@ package com.app.todos.infrastructure.entity.todos;
 import com.app.todos.domain.todos.Priority;
 import com.app.todos.domain.todos.Status;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @Table(name = "todos")
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class TodoEntity implements Serializable {
     @Serial

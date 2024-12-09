@@ -1,6 +1,6 @@
 package com.app.todos;
 
-import com.app.todos.application.usecases.metrics.MetricService;
+import com.app.todos.application.usecases.metrics.MetricUseCase;
 import com.app.todos.application.usecases.users.UserUseCase;
 import com.app.todos.adapters.output.metrics.MetricsNumbersResponseDto;
 import com.app.todos.infrastructure.entity.users.UserEntity;
@@ -30,7 +30,7 @@ public class MetricsServiceTests {
     @Mock
     private UserUseCase userService;
     @InjectMocks
-    private MetricService metricService;
+    private MetricUseCase metricService;
 
     UserEntity user = new UserEntity("Brian", "bian@gmail.com", "12345");
     String token = "Token";

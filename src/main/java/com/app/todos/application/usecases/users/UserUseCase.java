@@ -42,7 +42,6 @@ public class UserUseCase {
             throw new AppException("e-mail already exists");
         String encoded = passwordEncoder.encode(data.getPassword());
         data.setPassword(encoded);
-        //UserEntity u = new UserEntity(data.getName(), data.getEmail(), encoded);
         userGateway.create(data);
         return data;
     }

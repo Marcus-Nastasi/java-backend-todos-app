@@ -1,18 +1,21 @@
 package com.app.todos.domain.todos;
 
-import com.app.todos.infrastructure.entity.todos.TodoEntity;
-
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
-public class TodosPage {
+public class TodosPage implements Serializable {
+    @Serial
+    private static final long SerialVersionUID = 1L;
+
     private int page;
     private int per_page;
     private int total;
-    private List<TodoEntity> data;
+    private List<Todo> data;
 
     public TodosPage() {}
 
-    public TodosPage(int page, int per_page, int total, List<TodoEntity> data) {
+    public TodosPage(int page, int per_page, int total, List<Todo> data) {
         this.page = page;
         this.per_page = per_page;
         this.total = total;
@@ -43,11 +46,11 @@ public class TodosPage {
         this.total = total;
     }
 
-    public List<TodoEntity> getData() {
+    public List<Todo> getData() {
         return data;
     }
 
-    public void setData(List<TodoEntity> data) {
+    public void setData(List<Todo> data) {
         this.data = data;
     }
 }

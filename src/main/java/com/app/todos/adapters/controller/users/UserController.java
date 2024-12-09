@@ -1,7 +1,6 @@
 package com.app.todos.adapters.controller.users;
 
 import com.app.todos.adapters.input.users.UserRequestDTO;
-import com.app.todos.adapters.input.users.UserUpdateDTO;
 import com.app.todos.adapters.mapper.UserDtoMapper;
 import com.app.todos.domain.users.User;
 import com.app.todos.application.usecases.users.UserUseCase;
@@ -26,18 +25,13 @@ public class UserController {
     private UserDtoMapper userDtoMapper;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> get(
-            @PathVariable BigInteger id,
-            @RequestHeader Map<String, String> headers
-    ) {
+    public ResponseEntity<User> get(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
         String token = headers.get("authorization").replace("Bearer ", "");
         return ResponseEntity.ok(userUseCase.get(id, token));
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<User> newUser(
-            @RequestBody @Validated UserRequestDTO data
-    ) {
+    public ResponseEntity<User> newUser(@RequestBody @Validated UserRequestDTO data) {
         User u = userUseCase.newUser(userDtoMapper.mapFromRequest(data));
         return ResponseEntity.created(URI.create("/" + u.getId())).body(u);
     }
@@ -54,10 +48,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<User> del(
-            @PathVariable BigInteger id,
-            @RequestHeader Map<String, String> headers
-    ) {
+    public ResponseEntity<User> del(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
         String token = headers.get("authorization").replace("Bearer ", "");
         User u = userUseCase.delete(id, token);
         return ResponseEntity.ok(u);

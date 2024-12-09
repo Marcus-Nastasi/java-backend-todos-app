@@ -21,7 +21,7 @@ public class User {
         setEmail(userUpdated.getEmail());
         setName(userUpdated.getName());
         setPassword(userUpdated.getPassword());
-        return userUpdated;
+        return this;
     }
 
     public BigInteger getId() {

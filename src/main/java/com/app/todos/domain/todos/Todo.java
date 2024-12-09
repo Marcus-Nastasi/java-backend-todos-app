@@ -1,9 +1,14 @@
 package com.app.todos.domain.todos;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDate;
 
-public class Todo {
+public class Todo implements Serializable {
+    @Serial
+    private static final long SerialVersionUID = 1L;
+
     private BigInteger id;
     private BigInteger user_id;
     private String client;
@@ -30,6 +35,16 @@ public class Todo {
         this.status = status;
         this.priority = priority;
         this.last_updated = last_updated;
+    }
+
+    public Todo updateDetails(Todo updatedTodo) {
+        this.setTitle(updatedTodo.getTitle());
+        this.setClient(updatedTodo.getClient());
+        this.setDescription(updatedTodo.getDescription());
+        this.setLink(updatedTodo.getLink());
+        this.setDue(updatedTodo.getDue());
+        this.setPriority(updatedTodo.getPriority());
+        return this;
     }
 
     public BigInteger getId() {

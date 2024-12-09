@@ -1,23 +1,22 @@
 package com.app.todos.application.usecases.metrics;
 
 import com.app.todos.application.usecases.users.UserUseCase;
-import com.app.todos.adapters.output.metrics.MetricsNumbersResponseDto;
+import com.app.todos.domain.metrics.MetricsResponse;
 import com.app.todos.infrastructure.persistence.todos.TodosRepo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Map;
 
-@Service
-public class MetricService {
+public class MetricUseCase {
+    private final TodosRepo todosRepo;
+    private final UserUseCase userUseCase;
 
-    @Autowired
-    private TodosRepo todosRepo;
-    @Autowired
-    private UserUseCase userService;
+    public MetricUseCase(TodosRepo todosRepo, UserUseCase userUseCase) {
+        this.todosRepo = todosRepo;
+        this.userUseCase = userUseCase;
+    }
 
     /*
         GRAPH DONE 1. Tarefas por Prioridade:
@@ -58,21 +57,21 @@ public class MetricService {
         Gráfico sugerido: Gráfico de linha com diferentes linhas para cada status.
      */
 
-    public MetricsNumbersResponseDto get(
+    public MetricsResponse get(
             BigInteger user_id,
             String token,
             String client,
             LocalDate from,
             LocalDate to
     ) {
-        userService.validateUserToken(user_id, token);
+        userUseCase.validateUserToken(user_id, token);
         Map<String, BigDecimal> metricsMap = todosRepo.metricsQuery(
             user_id,
             client,
             from != null ? from : LocalDate.of(1900, 1, 1),
             to != null ? to : LocalDate.now()
         );
-        return new MetricsNumbersResponseDto(
+        return new MetricsResponse(
             Long.parseLong(String.valueOf(metricsMap.get("total"))),
             Long.parseLong(String.valueOf(metricsMap.get("high"))),
             Long.parseLong(String.valueOf(metricsMap.get("medium"))),

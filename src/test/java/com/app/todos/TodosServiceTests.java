@@ -12,7 +12,7 @@ import com.app.todos.infrastructure.entity.users.UserEntity;
 import com.app.todos.infrastructure.persistence.todos.TodosRepo;
 import com.app.todos.infrastructure.persistence.users.UserRepo;
 import com.app.todos.infrastructure.gateway.auth.TokenService;
-import com.app.todos.application.usecases.todos.TodosService;
+import com.app.todos.application.usecases.todos.TodosUseCase;
 import com.app.todos.application.exception.ForbiddenException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +47,7 @@ public class TodosServiceTests {
     @Mock
     private UserUseCase userService;
     @InjectMocks
-    private TodosService todosService;
+    private TodosUseCase todosService;
 
     TodoEntity todo = new TodoEntity(BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Priority.HIGH, LocalDate.now());
     TodoEntity todo2 = new TodoEntity(BigInteger.valueOf(1600), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Priority.LOW, LocalDate.now());
