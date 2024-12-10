@@ -5,6 +5,7 @@ import com.app.todos.domain.metrics.MetricsResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class MetricsController {
     private MetricUseCase metricService;
 
     @GetMapping(value = "/all/{user_id}")
+    @Cacheable("metrics")
     public ResponseEntity<MetricsResponse> all(
             @PathVariable BigInteger user_id,
             @RequestParam("client") @Nullable String client,

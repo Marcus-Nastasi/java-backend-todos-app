@@ -80,41 +80,67 @@ Follow the steps below to set up and run the project on your local machine.
     version: '3.8'
 
     services:
-    postgres:
-    image: postgres:15
-    environment:
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: 123
-    POSTGRES_DB: postgres
+      postgres:
+        image: postgres:15
+        container_name: todos-postgres
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 123
+          POSTGRES_DB: postgres
+        volumes:
+          - postgres-data-todos:/var/lib/postgresql/data
+        ports:
+          - "5432:5432"
+        networks:
+          - todos-network
+
+      redis:
+        image: redis:latest
+        container_name: redis-todos-docker
+        command: ["redis-server", "--bind", "0.0.0.0", "--protected-mode", "no", "--loglevel", "debug"]
+        ports:
+          - "6379:6379"
+        networks:
+          - todos-network
+
+      backend:
+        build: ../todos
+        image: todos-backend:latest
+        container_name: todos-backend
+        environment:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: 123
+          SPRING_REDIS_HOST: redis
+          SPRING_REDIS_PORT: 6379
+        depends_on:
+          - postgres
+          - redis
+        ports:
+          - "8080:8080"
+        networks:
+          - todos-network
+
+      frontend:
+        build: ../todos-front
+        container_name: todos-frontend
+        environment:
+          API_URL: http://backend:8080
+        ports:
+          - "3000:3000"
+        networks:
+          - todos-network
+
+    networks:
+      todos-network:
+        driver: bridge
+
     volumes:
-    - postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    
-    backend:
-    build: ../todos
-    environment:
-    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
-    SPRING_DATASOURCE_USERNAME: postgres
-    SPRING_DATASOURCE_PASSWORD: 123
-    depends_on:
-    - postgres
-    ports:
-      - "8080:8080"
-    
-    frontend:
-    build: ../todos-front
-    environment:
-    API_URL: http://backend:8080
-    ports:
-    - "3000:3000"
-    
-    volumes:
-    postgres-data:
+      postgres-data-todos:
 
 4. **Run the application with Docker: Ensure you're in the project's root directory and execute Docker Compose to start all services automatically:**
     ```bash
-    [sudo] docker-compose up --d
+    [sudo] docker-compose up --build --d
 
 5. **Wait for the build to complete and access the application: Once the build is finished, the application will be available in your browser:**
    ```bash

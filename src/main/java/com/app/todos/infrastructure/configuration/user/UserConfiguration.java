@@ -1,4 +1,4 @@
-package com.app.todos.infrastructure.configuration;
+package com.app.todos.infrastructure.configuration.user;
 
 import com.app.todos.adapters.mapper.UserDtoMapper;
 import com.app.todos.application.gateway.auth.PasswordGateway;

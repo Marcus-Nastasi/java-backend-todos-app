@@ -1,4 +1,4 @@
-package com.app.todos.infrastructure.configuration;
+package com.app.todos.infrastructure.configuration.security;
 
 import com.app.todos.application.gateway.auth.AuthGateway;
 import com.app.todos.application.usecases.auth.AuthUseCase;
@@ -21,5 +21,10 @@ public class AuthConfiguration {
     @Bean
     public AuthGateway authGateway(PasswordEncoder passwordEncoder, UserRepo userRepo, TokenProvider tokenService, AuthenticationManager authenticationManager, UserEntityMapper userEntityMapper) {
         return new AuthRepoGateway(passwordEncoder, userRepo, tokenService, authenticationManager, userEntityMapper);
+    }
+
+    @Bean
+    public TokenProvider tokenProvider() {
+        return new TokenProvider();
     }
 }

@@ -73,14 +73,14 @@ public class TodosController {
     }
 
     @PostMapping(value = "/register")
-    @CacheEvict(value = "todos", allEntries = true)
+    @CacheEvict(value = {"todos", "metrics"}, allEntries = true)
     public ResponseEntity<Todo> newTodo(@RequestBody @Validated TodosRequestDTO data) {
         Todo todo = todosUseCase.newTodo(todoDtoMapper.mapFromRequest(data));
         return ResponseEntity.created(URI.create("/api/todos/get/" + todo.getId())).body(todo);
     }
 
     @PatchMapping(value = "/update/{id}")
-    @CacheEvict(value = "todos", allEntries = true)
+    @CacheEvict(value = {"todos", "metrics"}, allEntries = true)
     public ResponseEntity<Todo> update(
             @PathVariable BigInteger id,
             @RequestBody @Validated TodosUpdateDTO data,
@@ -91,7 +91,7 @@ public class TodosController {
     }
 
     @PatchMapping(value = "/update/status/{id}")
-    @CacheEvict(value = "todos", allEntries = true)
+    @CacheEvict(value = {"todos", "metrics"}, allEntries = true)
     public ResponseEntity<Todo> updateStatus(
             @PathVariable BigInteger id,
             @RequestBody TodosStatusDTO data,
@@ -103,7 +103,7 @@ public class TodosController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    @CacheEvict(value = "todos", allEntries = true)
+    @CacheEvict(value = {"todos", "metrics"}, allEntries = true)
     public ResponseEntity<TodoResponseDto> delete(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
         String token = headers.get("authorization").replace("Bearer ", "");
         return ResponseEntity.ok(todoDtoMapper.mapToResponse(todosUseCase.delete(id, token)));

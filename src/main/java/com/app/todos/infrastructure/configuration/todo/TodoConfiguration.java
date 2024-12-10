@@ -1,4 +1,4 @@
-package com.app.todos.infrastructure.configuration;
+package com.app.todos.infrastructure.configuration.todo;
 
 import com.app.todos.adapters.mapper.TodoDtoMapper;
 import com.app.todos.application.gateway.todos.TodosGateway;

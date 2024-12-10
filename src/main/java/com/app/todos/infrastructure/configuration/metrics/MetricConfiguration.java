@@ -1,4 +1,4 @@
-package com.app.todos.infrastructure.configuration;
+package com.app.todos.infrastructure.configuration.metrics;
 
 import com.app.todos.application.gateway.todos.TodosGateway;
 import com.app.todos.application.usecases.metrics.MetricUseCase;
