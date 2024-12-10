@@ -1,4 +1,4 @@
-package com.app.todos.infrastructure.gateway.auth;
+package com.app.todos.infrastructure.gateway.security;
 
 import com.app.todos.infrastructure.persistence.users.UserRepo;
 import jakarta.servlet.FilterChain;
@@ -24,18 +24,20 @@ public class TokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
     ) throws ServletException, IOException {
-        String token = recover(request);
-        if (token != null) {
-            String email = tokenService.validate(token);
-            UserDetails u = userRepo.findByEmail(email);
-            var auth = new UsernamePasswordAuthenticationToken(u, null, u.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            String token = recover(request);
+            if (token != null) {
+                String email = tokenService.validate(token);
+                UserDetails u = userRepo.findByEmail(email);
+                var auth = new UsernamePasswordAuthenticationToken(u, null, u.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
-        filterChain.doFilter(request, response);
     }
 
     private String recover(HttpServletRequest request) {

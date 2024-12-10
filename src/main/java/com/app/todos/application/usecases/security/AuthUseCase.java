@@ -1,7 +1,7 @@
-package com.app.todos.application.usecases.auth;
+package com.app.todos.application.usecases.security;
 
 import com.app.todos.application.exception.AppException;
-import com.app.todos.application.gateway.auth.AuthGateway;
+import com.app.todos.application.gateway.security.AuthGateway;
 import com.app.todos.domain.users.User;
 
 public class AuthUseCase {

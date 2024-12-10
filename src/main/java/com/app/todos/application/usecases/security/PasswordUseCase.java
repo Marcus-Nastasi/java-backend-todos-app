@@ -1,6 +1,6 @@
-package com.app.todos.application.usecases.auth;
+package com.app.todos.application.usecases.security;
 
-import com.app.todos.application.gateway.auth.PasswordGateway;
+import com.app.todos.application.gateway.security.PasswordGateway;
 
 public class PasswordUseCase {
 
@@ -10,11 +10,11 @@ public class PasswordUseCase {
         this.passwordGateway = passwordGateway;
     }
 
-    String encode(String raw_password) {
+    public String encode(String raw_password) {
         return passwordGateway.encode(raw_password);
     }
 
-    boolean matches(String raw_password, String password) {
+    public boolean matches(String raw_password, String password) {
         return passwordGateway.matches(raw_password, password);
     }
 }

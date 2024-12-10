@@ -25,7 +25,18 @@ public class TodosRepoGateway implements TodosGateway {
     }
 
     @Override
-    public TodosPage getAll(BigInteger user_id, String query, String client, Integer status, Integer priority, LocalDate from, LocalDate to, LocalDate due, int page, int size) {
+    public TodosPage getAll(
+            BigInteger user_id,
+            String query,
+            String client,
+            Integer status,
+            Integer priority,
+            LocalDate from,
+            LocalDate to,
+            LocalDate due,
+            int page,
+            int size
+    ) {
         Page<TodoEntity> todoEntities = todosRepo.getUserTodos(
             user_id,
             query,

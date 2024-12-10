@@ -11,11 +11,11 @@ import java.time.LocalDate;
 
 public class TodosUseCase {
 
-    private final TodosGateway todosRepoGateway;
+    private final TodosGateway todosGateway;
     private final UserUseCase userUseCase;
 
     public TodosUseCase(TodosGateway todosRepoGateway, UserUseCase userUseCase) {
-        this.todosRepoGateway = todosRepoGateway;
+        this.todosGateway = todosRepoGateway;
         this.userUseCase = userUseCase;
     }
 
@@ -35,7 +35,7 @@ public class TodosUseCase {
             int size
     ) {
         userUseCase.validateUserToken(user_id, token);
-        return todosRepoGateway.getAll(
+        return todosGateway.getAll(
             user_id,
             query,
             client,
@@ -50,7 +50,7 @@ public class TodosUseCase {
     }
 
     public Todo get(BigInteger id, String token) {
-        Todo t = todosRepoGateway.get(id);
+        Todo t = todosGateway.get(id);
         userUseCase.validateUserToken(t.getUser_id(), token);
         return t;
     }
@@ -59,27 +59,27 @@ public class TodosUseCase {
         data.setStatus(Status.PENDING);
         data.setCreation(LocalDate.now());
         data.setLast_updated(LocalDate.now());
-        return todosRepoGateway.create(data);
+        return todosGateway.create(data);
     }
 
     public Todo update(BigInteger id, Todo data, String token) {
-        Todo t = todosRepoGateway.get(id);
+        Todo t = todosGateway.get(id);
         userUseCase.validateUserToken(t.getUser_id(), token);
         t.setLast_updated(LocalDate.now());
-        return todosRepoGateway.update(id, t.updateDetails(data));
+        return todosGateway.update(id, t.updateDetails(data));
     }
 
     public Todo updateStatus(BigInteger id, Status data, String token) {
-        Todo t = todosRepoGateway.get(id);
+        Todo t = todosGateway.get(id);
         userUseCase.validateUserToken(t.getUser_id(), token);
         t.setStatus(data);
         t.setLast_updated(LocalDate.now());
-        return todosRepoGateway.update(id, t);
+        return todosGateway.update(id, t);
     }
 
     public Todo delete(BigInteger id, String token) {
-        Todo t = todosRepoGateway.get(id);
+        Todo t = todosGateway.get(id);
         userUseCase.validateUserToken(t.getUser_id(), token);
-        return todosRepoGateway.delete(id);
+        return todosGateway.delete(id);
     }
 }

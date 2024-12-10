@@ -1,7 +1,7 @@
-package com.app.todos.infrastructure.gateway.auth;
+package com.app.todos.infrastructure.gateway.security;
 
 import com.app.todos.application.exception.AppException;
-import com.app.todos.application.gateway.auth.TokenGateway;
+import com.app.todos.application.gateway.security.TokenGateway;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

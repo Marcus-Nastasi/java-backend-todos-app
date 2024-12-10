@@ -1,4 +1,4 @@
-package com.app.todos.application.gateway.auth;
+package com.app.todos.application.gateway.security;
 
 import com.app.todos.domain.users.User;
 

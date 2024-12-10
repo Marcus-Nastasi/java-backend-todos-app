@@ -1,4 +1,4 @@
-package com.app.todos.infrastructure.gateway.auth;
+package com.app.todos.infrastructure.gateway.security;
 
 import com.app.todos.infrastructure.persistence.users.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;

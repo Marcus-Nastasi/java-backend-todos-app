@@ -1,4 +1,4 @@
-package com.app.todos.application.gateway.auth;
+package com.app.todos.application.gateway.security;
 
 public interface TokenGateway {
     String generate(String email);

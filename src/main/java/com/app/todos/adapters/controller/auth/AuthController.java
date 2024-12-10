@@ -2,7 +2,7 @@ package com.app.todos.adapters.controller.auth;
 
 import com.app.todos.adapters.input.auth.AuthRequestDTO;
 import com.app.todos.adapters.output.auth.AuthResponseDTO;
-import com.app.todos.application.usecases.auth.AuthUseCase;
+import com.app.todos.application.usecases.security.AuthUseCase;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -2,8 +2,8 @@ package com.app.todos;
 
 import com.app.todos.adapters.input.users.UserRequestDTO;
 import com.app.todos.adapters.input.users.UserUpdateDTO;
-import com.app.todos.application.gateway.auth.PasswordGateway;
-import com.app.todos.application.gateway.auth.TokenGateway;
+import com.app.todos.application.gateway.security.PasswordGateway;
+import com.app.todos.application.gateway.security.TokenGateway;
 import com.app.todos.application.gateway.users.UserGateway;
 import com.app.todos.domain.users.User;
 import com.app.todos.application.usecases.users.UserUseCase;

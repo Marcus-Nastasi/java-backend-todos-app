@@ -1,10 +1,10 @@
 package com.app.todos.infrastructure.configuration.user;
 
 import com.app.todos.adapters.mapper.UserDtoMapper;
-import com.app.todos.application.gateway.auth.PasswordGateway;
+import com.app.todos.application.gateway.security.PasswordGateway;
 import com.app.todos.application.gateway.users.UserGateway;
 import com.app.todos.application.usecases.users.UserUseCase;
-import com.app.todos.infrastructure.gateway.auth.TokenProvider;
+import com.app.todos.infrastructure.gateway.security.TokenProvider;
 import com.app.todos.infrastructure.gateway.users.UserRepoGateway;
 import com.app.todos.infrastructure.mapper.user.UserEntityMapper;
 import com.app.todos.infrastructure.persistence.users.UserRepo;

@@ -1,9 +1,8 @@
 package com.app.todos.infrastructure.configuration.security;
 
-import com.app.todos.application.gateway.auth.PasswordGateway;
-import com.app.todos.infrastructure.gateway.auth.PasswordImGateway;
-import com.app.todos.infrastructure.gateway.auth.TokenFilter;
-import com.app.todos.infrastructure.gateway.auth.TokenProvider;
+import com.app.todos.application.gateway.security.PasswordGateway;
+import com.app.todos.infrastructure.gateway.security.PasswordImGateway;
+import com.app.todos.infrastructure.gateway.security.TokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

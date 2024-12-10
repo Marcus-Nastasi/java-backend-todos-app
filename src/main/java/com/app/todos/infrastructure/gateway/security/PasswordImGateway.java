@@ -1,6 +1,6 @@
-package com.app.todos.infrastructure.gateway.auth;
+package com.app.todos.infrastructure.gateway.security;
 
-import com.app.todos.application.gateway.auth.PasswordGateway;
+import com.app.todos.application.gateway.security.PasswordGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

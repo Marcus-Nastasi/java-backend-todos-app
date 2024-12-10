@@ -1,7 +1,7 @@
 package com.app.todos.application.usecases.users;
 
-import com.app.todos.application.gateway.auth.PasswordGateway;
-import com.app.todos.application.gateway.auth.TokenGateway;
+import com.app.todos.application.gateway.security.PasswordGateway;
+import com.app.todos.application.gateway.security.TokenGateway;
 import com.app.todos.application.gateway.users.UserGateway;
 import com.app.todos.domain.users.User;
 import com.app.todos.application.exception.AppException;

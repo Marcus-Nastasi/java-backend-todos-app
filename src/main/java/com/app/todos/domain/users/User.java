@@ -1,8 +1,13 @@
 package com.app.todos.domain.users;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
 
-public class User {
+public class User implements Serializable {
+    @Serial
+    private static final long SerialVersionUID = 1L;
+
     private BigInteger id;
     private String name;
     private String email;

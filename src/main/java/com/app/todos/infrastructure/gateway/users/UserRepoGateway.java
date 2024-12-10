@@ -24,7 +24,7 @@ public class UserRepoGateway implements UserGateway {
 
     @Override
     public User findByEmail(String email) {
-        return null;
+        return userEntityMapper.mapFromUserEntity(userRepo.findByEmail(email));
     }
 
     @Override
