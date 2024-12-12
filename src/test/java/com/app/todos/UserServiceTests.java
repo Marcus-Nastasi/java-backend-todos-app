@@ -71,7 +71,7 @@ public class UserServiceTests {
         when(userGateway.create(any(User.class))).thenReturn(user);
 
         assertDoesNotThrow(() -> {
-            userService.update(BigInteger.valueOf(2500), user, token);
+            userService.update(BigInteger.valueOf(2500), user, "", token);
         });
 
         verify(userGateway, times(1)).get(any(BigInteger.class));

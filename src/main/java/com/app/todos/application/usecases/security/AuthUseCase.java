@@ -13,7 +13,9 @@ public class AuthUseCase {
     }
 
     public User getByEmail(String email) {
-        return authGateway.getByEmail(email);
+        User user = authGateway.getByEmail(email);
+        if (user == null) throw new AppException("user not found");
+        return user;
     }
 
     public String login(String email, String password) {

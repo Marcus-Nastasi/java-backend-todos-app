@@ -1,6 +1,7 @@
 package com.app.todos.adapters.controller.users;
 
 import com.app.todos.adapters.input.users.UserRequestDTO;
+import com.app.todos.adapters.input.users.UserUpdateDTO;
 import com.app.todos.adapters.mapper.UserDtoMapper;
 import com.app.todos.domain.users.User;
 import com.app.todos.application.usecases.users.UserUseCase;
@@ -18,7 +19,6 @@ import java.util.Map;
 @RequestMapping(value = "/api/user")
 @SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
-
     @Autowired
     private UserUseCase userUseCase;
     @Autowired
@@ -38,12 +38,12 @@ public class UserController {
 
     @PatchMapping(value = "/update/{id}")
     public ResponseEntity<User> update(
-            @RequestBody @Validated UserRequestDTO data,
+            @RequestBody @Validated UserUpdateDTO data,
             @PathVariable BigInteger id,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
-        User u = userUseCase.update(id, userDtoMapper.mapFromRequest(data), token);
+        User u = userUseCase.update(id, userDtoMapper.mapFromUpdate(data), data.currentPassword(), token);
         return ResponseEntity.ok(u);
     }
 

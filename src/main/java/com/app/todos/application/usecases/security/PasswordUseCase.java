@@ -3,7 +3,6 @@ package com.app.todos.application.usecases.security;
 import com.app.todos.application.gateway.security.PasswordGateway;
 
 public class PasswordUseCase {
-
     private final PasswordGateway passwordGateway;
 
     public PasswordUseCase(PasswordGateway passwordGateway) {

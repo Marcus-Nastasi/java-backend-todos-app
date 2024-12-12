@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SecurityService implements UserDetailsService {
-
     @Autowired
     private UserRepo userRepo;
 

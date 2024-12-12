@@ -1,8 +1,8 @@
 package com.app.todos.infrastructure.configuration.user;
 
 import com.app.todos.adapters.mapper.UserDtoMapper;
-import com.app.todos.application.gateway.security.PasswordGateway;
 import com.app.todos.application.gateway.users.UserGateway;
+import com.app.todos.application.usecases.security.PasswordUseCase;
 import com.app.todos.application.usecases.users.UserUseCase;
 import com.app.todos.infrastructure.gateway.security.TokenProvider;
 import com.app.todos.infrastructure.gateway.users.UserRepoGateway;
@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class UserConfiguration {
     @Bean
-    public UserUseCase userUseCase(UserGateway userGateway, PasswordGateway passwordGateway, TokenProvider tokenProvider) {
-        return new UserUseCase(userGateway, passwordGateway, tokenProvider);
+    public UserUseCase userUseCase(UserGateway userGateway, PasswordUseCase passwordUseCase, TokenProvider tokenProvider) {
+        return new UserUseCase(userGateway, passwordUseCase, tokenProvider);
     }
 
     @Bean

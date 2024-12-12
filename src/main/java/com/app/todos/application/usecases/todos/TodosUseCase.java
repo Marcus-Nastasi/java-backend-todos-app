@@ -10,7 +10,6 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 
 public class TodosUseCase {
-
     private final TodosGateway todosGateway;
     private final UserUseCase userUseCase;
 
