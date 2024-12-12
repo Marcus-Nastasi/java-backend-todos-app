@@ -5,18 +5,18 @@ import com.app.todos.adapters.output.todos.TodoResponseDto;
 import com.app.todos.adapters.input.todos.TodosRequestDTO;
 import com.app.todos.adapters.input.todos.TodosStatusDTO;
 import com.app.todos.adapters.input.todos.TodosUpdateDTO;
+import com.app.todos.adapters.output.todos.TodosPageResponseDto;
 import com.app.todos.domain.todos.Todo;
-import com.app.todos.domain.todos.TodosPage;
 import com.app.todos.application.usecases.todos.TodosUseCase;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -36,14 +36,14 @@ public class TodosController {
 
     @GetMapping(value = "/get/{id}")
     @Cacheable("todos")
-    public Todo getSingle(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
+    public Todo get(@PathVariable BigInteger id, @RequestHeader Map<String, String> headers) {
         String token = headers.get("authorization").replace("Bearer ", "");
         return todosUseCase.get(id, token);
     }
 
     @GetMapping(value = "/all/{user_id}")
     @Cacheable("todos")
-    public TodosPage all(
+    public TodosPageResponseDto getAll(
             @RequestParam("page") @DefaultValue("0") int page,
             @RequestParam("size") @DefaultValue("10") int size,
             @RequestParam("query") @Nullable String query,
@@ -57,7 +57,7 @@ public class TodosController {
             @RequestHeader Map<String, String> headers
     ) {
         if (size <= 0) size = 10;
-        return todosUseCase.getAll(
+        return todoDtoMapper.mapToPageResponse(todosUseCase.getAll(
             user_id,
             headers.get("authorization").replace("Bearer ", ""),
             query,
@@ -69,12 +69,12 @@ public class TodosController {
             due,
             page,
             size
-        );
+        ));
     }
 
     @PostMapping(value = "/register")
     @CacheEvict(value = {"todos", "metrics"}, allEntries = true)
-    public ResponseEntity<Todo> newTodo(@RequestBody @Validated TodosRequestDTO data) {
+    public ResponseEntity<Todo> create(@RequestBody @Valid TodosRequestDTO data) {
         Todo todo = todosUseCase.newTodo(todoDtoMapper.mapFromRequest(data));
         return ResponseEntity.created(URI.create("/api/todos/get/" + todo.getId())).body(todo);
     }
@@ -83,7 +83,7 @@ public class TodosController {
     @CacheEvict(value = {"todos", "metrics"}, allEntries = true)
     public ResponseEntity<Todo> update(
             @PathVariable BigInteger id,
-            @RequestBody @Validated TodosUpdateDTO data,
+            @RequestBody @Valid TodosUpdateDTO data,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");
@@ -94,7 +94,7 @@ public class TodosController {
     @CacheEvict(value = {"todos", "metrics"}, allEntries = true)
     public ResponseEntity<Todo> updateStatus(
             @PathVariable BigInteger id,
-            @RequestBody TodosStatusDTO data,
+            @RequestBody @Valid TodosStatusDTO data,
             @RequestHeader Map<String, String> headers
     ) {
         String token = headers.get("authorization").replace("Bearer ", "");

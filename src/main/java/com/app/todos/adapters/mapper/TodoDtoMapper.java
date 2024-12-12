@@ -3,7 +3,9 @@ package com.app.todos.adapters.mapper;
 import com.app.todos.adapters.input.todos.TodosRequestDTO;
 import com.app.todos.adapters.input.todos.TodosUpdateDTO;
 import com.app.todos.adapters.output.todos.TodoResponseDto;
+import com.app.todos.adapters.output.todos.TodosPageResponseDto;
 import com.app.todos.domain.todos.Todo;
+import com.app.todos.domain.todos.TodosPage;
 
 public class TodoDtoMapper {
     public TodoResponseDto mapToResponse(Todo todo) {
@@ -19,6 +21,15 @@ public class TodoDtoMapper {
                 todo.getStatus(),
                 todo.getPriority(),
                 todo.getLast_updated()
+        );
+    }
+
+    public TodosPageResponseDto mapToPageResponse(TodosPage todosPage) {
+        return new TodosPageResponseDto(
+                todosPage.getPage(),
+                todosPage.getPer_page(),
+                todosPage.getTotal(),
+                todosPage.getData()
         );
     }
 

@@ -1,6 +1,7 @@
 package com.app.todos.infrastructure.configuration.security;
 
 import com.app.todos.application.gateway.security.PasswordGateway;
+import com.app.todos.application.usecases.security.PasswordUseCase;
 import com.app.todos.infrastructure.gateway.security.PasswordImGateway;
 import com.app.todos.infrastructure.gateway.security.TokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfigu
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends DelegatingWebMvcConfiguration {
-
     @Autowired
     private TokenFilter tokenFilter;
 
@@ -61,6 +61,11 @@ public class SecurityConfiguration extends DelegatingWebMvcConfiguration {
     @Bean
     public PasswordGateway passwordGateway() {
         return new PasswordImGateway();
+    }
+
+    @Bean
+    public PasswordUseCase passwordUseCase(PasswordGateway passwordGateway) {
+        return new PasswordUseCase(passwordGateway);
     }
 
     @Bean

@@ -40,7 +40,7 @@ public class UserRepoGateway implements UserGateway {
 
     @Override
     public User delete(BigInteger id) {
-        User user = this.get(id);
+        User user = get(id);
         userRepo.deleteById(id);
         return user;
     }

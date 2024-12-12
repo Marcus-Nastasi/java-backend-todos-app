@@ -1,10 +1,13 @@
 package com.app.todos.domain.metrics;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class MetricsResponse implements Serializable {
-    private static final long SerialVersionUID = 1L;
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final Long total;
     private final Long high;

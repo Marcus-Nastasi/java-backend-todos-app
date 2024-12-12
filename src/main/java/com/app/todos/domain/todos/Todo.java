@@ -6,8 +6,9 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 
 public class Todo implements Serializable {
+
     @Serial
-    private static final long SerialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private BigInteger id;
     private BigInteger user_id;

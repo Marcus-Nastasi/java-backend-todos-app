@@ -5,6 +5,7 @@ import com.app.todos.adapters.input.users.UserUpdateDTO;
 import com.app.todos.application.gateway.security.PasswordGateway;
 import com.app.todos.application.gateway.security.TokenGateway;
 import com.app.todos.application.gateway.users.UserGateway;
+import com.app.todos.application.usecases.security.PasswordUseCase;
 import com.app.todos.domain.users.User;
 import com.app.todos.application.usecases.users.UserUseCase;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ public class UserServiceTests {
     @Mock
     private UserGateway userGateway;
     @Mock
-    private PasswordGateway encoder;
+    private PasswordUseCase encoder;
     @Mock
     private TokenGateway tokenGateway;
     @InjectMocks
@@ -52,31 +53,33 @@ public class UserServiceTests {
 
     @Test
     void newUserTest() {
+        when(userGateway.findByEmail(any(String.class))).thenReturn(null);
         when(userGateway.create(any(User.class))).thenReturn(user);
 
         assertEquals(user.getEmail(), userService.create(user).getEmail());
         assertDoesNotThrow(() -> {
+            user.setPassword("1234");
             userService.create(user);
         });
 
         verify(userGateway, times(2)).create(any(User.class));
+        verify(userGateway, times(2)).findByEmail(any(String.class));
     }
 
     @Test
     void update() {
         when(userGateway.get(any(BigInteger.class))).thenReturn(user);
         when(tokenGateway.validate(token)).thenReturn(user.getEmail());
-        when(encoder.matches(userUpdateDTO.currentPassword(), user.getPassword()))
-            .thenReturn(true);
-        when(userGateway.create(any(User.class))).thenReturn(user);
+        when(encoder.matches(userUpdateDTO.currentPassword(), user.getPassword())).thenReturn(true);
+        when(userGateway.update(any(BigInteger.class), any(User.class))).thenReturn(user);
 
         assertDoesNotThrow(() -> {
-            userService.update(BigInteger.valueOf(2500), user, "", token);
+            userService.update(BigInteger.valueOf(2500), user, "12345", token);
         });
 
         verify(userGateway, times(1)).get(any(BigInteger.class));
         verify(tokenGateway, times(1)).validate(any(String.class));
-        verify(userGateway, times(1)).create(any(User.class));
+        verify(userGateway, times(1)).update(any(BigInteger.class), any(User.class));
     }
 
     @Test

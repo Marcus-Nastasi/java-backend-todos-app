@@ -1,9 +1,9 @@
 package com.app.todos.adapters.output.metrics;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 public record MetricsNumbersResponseDto(
-
     Long total,
     Long high,
     Long medium,
@@ -14,4 +14,4 @@ public record MetricsNumbersResponseDto(
     Long overdue,
     Long future,
     BigDecimal completion_rate
-) {}
+) implements Serializable {}

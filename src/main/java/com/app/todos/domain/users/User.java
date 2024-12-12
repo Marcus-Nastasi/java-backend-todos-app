@@ -5,8 +5,9 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 public class User implements Serializable {
+
     @Serial
-    private static final long SerialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private BigInteger id;
     private String name;
