@@ -2,7 +2,6 @@ package com.app.todos;
 
 import com.app.todos.adapters.input.users.UserRequestDTO;
 import com.app.todos.adapters.input.users.UserUpdateDTO;
-import com.app.todos.application.gateway.security.PasswordGateway;
 import com.app.todos.application.gateway.security.TokenGateway;
 import com.app.todos.application.gateway.users.UserGateway;
 import com.app.todos.application.usecases.security.PasswordUseCase;
@@ -29,7 +28,7 @@ public class UserServiceTests {
     @Mock
     private TokenGateway tokenGateway;
     @InjectMocks
-    private UserUseCase userService;
+    private UserUseCase userUseCase;
 
     User user = new User(BigInteger.valueOf(1), "Brian", "brian@gmail.com", "12345");
     UserRequestDTO userRequestDTO = new UserRequestDTO("Brian", "brian@gmail.com", "12345");
@@ -41,7 +40,7 @@ public class UserServiceTests {
         when(userGateway.get(any(BigInteger.class))).thenReturn(user);
         when(tokenGateway.validate(token)).thenReturn(user.getEmail());
 
-        User getFunction = userService.get(BigInteger.valueOf(2000), token);
+        User getFunction = userUseCase.get(BigInteger.valueOf(2000), token);
 
         assertEquals(getFunction, user);
         assertEquals(getFunction.getEmail(), user.getEmail());
@@ -56,10 +55,10 @@ public class UserServiceTests {
         when(userGateway.findByEmail(any(String.class))).thenReturn(null);
         when(userGateway.create(any(User.class))).thenReturn(user);
 
-        assertEquals(user.getEmail(), userService.create(user).getEmail());
+        assertEquals(user.getEmail(), userUseCase.create(user).getEmail());
         assertDoesNotThrow(() -> {
             user.setPassword("1234");
-            userService.create(user);
+            userUseCase.create(user);
         });
 
         verify(userGateway, times(2)).create(any(User.class));
@@ -74,7 +73,7 @@ public class UserServiceTests {
         when(userGateway.update(any(BigInteger.class), any(User.class))).thenReturn(user);
 
         assertDoesNotThrow(() -> {
-            userService.update(BigInteger.valueOf(2500), user, "12345", token);
+            userUseCase.update(BigInteger.valueOf(2500), user, "12345", token);
         });
 
         verify(userGateway, times(1)).get(any(BigInteger.class));
@@ -87,14 +86,14 @@ public class UserServiceTests {
         when(userGateway.get(any(BigInteger.class))).thenReturn(user);
         when(tokenGateway.validate(token)).thenReturn(user.getEmail());
 
-        assertEquals(user, userService.delete(BigInteger.valueOf(1005), token));
+        assertEquals(user, userUseCase.delete(BigInteger.valueOf(1005), token));
         assertEquals(
             user.getEmail(),
-            userService.delete(BigInteger.valueOf(1005), token)
+            userUseCase.delete(BigInteger.valueOf(1005), token)
                 .getEmail()
         );
         assertDoesNotThrow(() -> {
-            userService.delete(BigInteger.valueOf(1005), token);
+            userUseCase.delete(BigInteger.valueOf(1005), token);
         });
 
         verify(userGateway, times(3)).get(any(BigInteger.class));
