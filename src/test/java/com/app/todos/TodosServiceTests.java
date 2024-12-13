@@ -37,8 +37,8 @@ public class TodosServiceTests {
     @InjectMocks
     private TodosUseCase todosService;
 
-    Todo todo = new Todo(BigInteger.valueOf(1), BigInteger.valueOf(1500), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Status.PENDING, Priority.HIGH, LocalDate.now());
-    Todo todo2 = new Todo(BigInteger.valueOf(1), BigInteger.valueOf(1600), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Status.PENDING, Priority.LOW, LocalDate.now());
+    Todo todo = new Todo(BigInteger.valueOf(1), BigInteger.valueOf(1), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Status.PENDING, Priority.HIGH, LocalDate.now());
+    Todo todo2 = new Todo(BigInteger.valueOf(1), BigInteger.valueOf(1), "Coca-Cola", "Make machine", "Make refri machine", "none", LocalDate.now(), LocalDate.of(2024, 7, 15), Status.PENDING, Priority.LOW, LocalDate.now());
     User user = new User(BigInteger.valueOf(1), "Brian", "bian@gmail.com", "12345");
     List<Todo> todos = new ArrayList<>();
     String token = "Token";
@@ -69,7 +69,7 @@ public class TodosServiceTests {
     void getAll() {
         todos.add(todo);
         todos.add(todo2);
-        Page<Todo> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 2);
+        Page<Todo> todoPage = new PageImpl<>(todos, PageRequest.of(0, 10), 1);
         TodosPage todosPage = new TodosPage(
             todoPage.getPageable().getPageNumber(),
             todoPage.getPageable().getPageSize(),
@@ -77,23 +77,23 @@ public class TodosServiceTests {
             todos
         );
 
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(token))).thenReturn(user);
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(falseToken))).thenThrow(ForbiddenException.class);
+        when(userUseCase.validateUserToken(user.getId(), token)).thenReturn(user);
+        when(userUseCase.validateUserToken(user.getId(), falseToken)).thenThrow(ForbiddenException.class);
         when(todosGateway.getAll(
-            any(BigInteger.class),
-            any(String.class),
-            any(String.class),
-            any(Integer.class),
-            any(Integer.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
+            user.getId(),
+            "",
+            "",
+            0,
+            1,
+            LocalDate.of(1900, 1, 1),
+            LocalDate.now(),
+            LocalDate.now(),
             0,
             10
         )).thenReturn(todosPage);
 
         assertEquals(todosService.getAll(
-            BigInteger.valueOf(1500),
+            user.getId(),
             token,
             "",
             "",
@@ -106,7 +106,7 @@ public class TodosServiceTests {
             10
         ), todosPage);
         assertEquals(todosService.getAll(
-            BigInteger.valueOf(1500),
+            user.getId(),
             token,
             "",
             "",
@@ -119,7 +119,7 @@ public class TodosServiceTests {
             10
         ).getData(), todosPage.getData());
         assertDoesNotThrow(() -> todosService.getAll(
-            BigInteger.valueOf(1500),
+            user.getId(),
             token,
             "",
             "",
@@ -134,7 +134,7 @@ public class TodosServiceTests {
         assertThrows(
             ForbiddenException.class,
             () -> todosService.getAll(
-                BigInteger.valueOf(1500),
+                user.getId(),
                 falseToken,
                 "",
                 "",
@@ -149,18 +149,19 @@ public class TodosServiceTests {
         );
 
         verify(todosGateway, times(3)).getAll(
-            any(BigInteger.class),
-            any(String.class),
-            any(String.class),
-            any(Integer.class),
-            any(Integer.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
+            user.getId(),
+            "",
+            "",
+            0,
+            1,
+            LocalDate.of(1900, 1, 1),
+            LocalDate.now(),
+            LocalDate.now(),
             0,
             10
         );
-        verify(userUseCase, times(4)).validateUserToken(any(BigInteger.class), any(String.class));
+        verify(userUseCase, times(3)).validateUserToken(user.getId(), token);
+        verify(userUseCase, times(1)).validateUserToken(user.getId(), falseToken);
     }
 
     @Test
@@ -177,23 +178,23 @@ public class TodosServiceTests {
             todos
         );
 
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(token))).thenReturn(user);
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(falseToken))).thenThrow(ForbiddenException.class);
+        when(userUseCase.validateUserToken(user.getId(), token)).thenReturn(user);
+        when(userUseCase.validateUserToken(user.getId(), falseToken)).thenThrow(ForbiddenException.class);
         when(todosGateway.getAll(
-            any(BigInteger.class),
-            any(String.class),
-            any(String.class),
-            any(Integer.class),
-            any(Integer.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
+            user.getId(),
+            "",
+            "",
+            2,
+            1,
+            LocalDate.of(1900, 1, 1),
+            LocalDate.now(),
+            LocalDate.now(),
             0,
             10
         )).thenReturn(todosPage);
 
         assertEquals(todosService.getAll(
-            BigInteger.valueOf(1500),
+            user.getId(),
             token,
             "",
             "",
@@ -207,7 +208,7 @@ public class TodosServiceTests {
         ), todosPage);
         assertEquals(
             todosService.getAll(
-                BigInteger.valueOf(1500),
+                user.getId(),
                 token,
                 "",
                 "",
@@ -222,7 +223,7 @@ public class TodosServiceTests {
             todosPage.getData().getFirst().getStatus()
         );
         assertDoesNotThrow(() -> todosService.getAll(
-            BigInteger.valueOf(1500),
+            user.getId(),
             token,
             "",
             "",
@@ -237,7 +238,7 @@ public class TodosServiceTests {
         assertThrows(
             ForbiddenException.class,
             () -> todosService.getAll(
-                BigInteger.valueOf(1500),
+                user.getId(),
                 falseToken,
                 "",
                 "",
@@ -252,18 +253,19 @@ public class TodosServiceTests {
         );
 
         verify(todosGateway, times(3)).getAll(
-            any(BigInteger.class),
-            any(String.class),
-            any(String.class),
-            any(Integer.class),
-            any(Integer.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
+            user.getId(),
+            "",
+            "",
+            2,
+            1,
+            LocalDate.of(1900, 1, 1),
+            LocalDate.now(),
+            LocalDate.now(),
             0,
             10
         );
-        verify(userUseCase, times(4)).validateUserToken(any(BigInteger.class), any(String.class));
+        verify(userUseCase, times(3)).validateUserToken(user.getId(), token);
+        verify(userUseCase, times(1)).validateUserToken(user.getId(), falseToken);
     }
 
     @Test
@@ -280,23 +282,23 @@ public class TodosServiceTests {
             todos
         );
 
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(token))).thenReturn(user);
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(falseToken))).thenThrow(ForbiddenException.class);
+        when(userUseCase.validateUserToken(user.getId(), token)).thenReturn(user);
+        when(userUseCase.validateUserToken(user.getId(), falseToken)).thenThrow(ForbiddenException.class);
         when(todosGateway.getAll(
-            any(BigInteger.class),
-            any(String.class),
-            any(String.class),
-            any(Integer.class),
-            any(Integer.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
+            user.getId(),
+            "",
+            "",
+            1,
+            1,
+            LocalDate.of(1900, 1, 1),
+            LocalDate.now(),
+            LocalDate.now(),
             0,
             10
         )).thenReturn(todosPage);
 
         assertEquals(todosService.getAll(
-            BigInteger.valueOf(1500),
+            user.getId(),
             token,
             "",
             "",
@@ -310,7 +312,7 @@ public class TodosServiceTests {
         ), todosPage);
         assertEquals(
             todosService.getAll(
-                BigInteger.valueOf(1500),
+                user.getId(),
                 token,
                 "",
                 "",
@@ -325,7 +327,7 @@ public class TodosServiceTests {
             todosPage.getData().getFirst().getStatus()
         );
         assertDoesNotThrow(() -> todosService.getAll(
-            BigInteger.valueOf(1500),
+            user.getId(),
             token,
             "",
             "",
@@ -340,7 +342,7 @@ public class TodosServiceTests {
         assertThrows(
             ForbiddenException.class,
             () -> todosService.getAll(
-                BigInteger.valueOf(1500),
+                user.getId(),
                 falseToken,
                 "",
                 "",
@@ -355,18 +357,19 @@ public class TodosServiceTests {
         );
 
         verify(todosGateway, times(3)).getAll(
-            any(BigInteger.class),
-            any(String.class),
-            any(String.class),
-            any(Integer.class),
-            any(Integer.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
+            user.getId(),
+            "",
+            "",
+            1,
+            1,
+            LocalDate.of(1900, 1, 1),
+            LocalDate.now(),
+            LocalDate.now(),
             0,
             10
         );
-        verify(userUseCase, times(4)).validateUserToken(any(BigInteger.class), any(String.class));
+        verify(userUseCase, times(3)).validateUserToken(user.getId(), token);
+        verify(userUseCase, times(1)).validateUserToken(user.getId(), falseToken);
     }
 
     @Test
@@ -383,23 +386,23 @@ public class TodosServiceTests {
             todos
         );
 
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(token))).thenReturn(user);
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(falseToken))).thenThrow(ForbiddenException.class);
+        when(userUseCase.validateUserToken(user.getId(), token)).thenReturn(user);
+        when(userUseCase.validateUserToken(user.getId(), falseToken)).thenThrow(ForbiddenException.class);
         when(todosGateway.getAll(
-            any(BigInteger.class),
-            any(String.class),
-            any(String.class),
-            any(Integer.class),
-            any(Integer.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
+            user.getId(),
+            "",
+            "",
+            0,
+            1,
+            LocalDate.of(1900, 1, 1),
+            LocalDate.now(),
+            LocalDate.now(),
             0,
             10
         )).thenReturn(todosPage);
 
         assertEquals(todosService.getAll(
-            BigInteger.valueOf(1500),
+            user.getId(),
             token,
             "",
             "",
@@ -413,7 +416,7 @@ public class TodosServiceTests {
         ), todosPage);
         assertEquals(
             todosService.getAll(
-                BigInteger.valueOf(1500),
+                user.getId(),
                 token,
                 "",
                 "",
@@ -428,7 +431,7 @@ public class TodosServiceTests {
             todosPage.getData().getFirst().getStatus()
         );
         assertDoesNotThrow(() -> todosService.getAll(
-            BigInteger.valueOf(1500),
+            user.getId(),
             token,
             "",
             "",
@@ -443,7 +446,7 @@ public class TodosServiceTests {
         assertThrows(
             ForbiddenException.class,
             () -> todosService.getAll(
-                BigInteger.valueOf(1500),
+                user.getId(),
                 falseToken,
                 "",
                 "",
@@ -458,22 +461,23 @@ public class TodosServiceTests {
         );
 
         verify(todosGateway, times(3)).getAll(
-            any(BigInteger.class),
-            any(String.class),
-            any(String.class),
-            any(Integer.class),
-            any(Integer.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
-            any(LocalDate.class),
+            user.getId(),
+            "",
+            "",
+            0,
+            1,
+            LocalDate.of(1900, 1, 1),
+            LocalDate.now(),
+            LocalDate.now(),
             0,
             10
         );
-        verify(userUseCase, times(4)).validateUserToken(any(BigInteger.class), any(String.class));
+        verify(userUseCase, times(3)).validateUserToken(user.getId(), token);
+        verify(userUseCase, times(1)).validateUserToken(user.getId(), falseToken);
     }
 
     @Test
-    void newTodo() {
+    void create() {
         when(todosGateway.create(any(Todo.class))).thenReturn(todo);
 
         assertEquals(todo.getId(), todosService.newTodo(todo).getId());
@@ -484,75 +488,76 @@ public class TodosServiceTests {
 
     @Test
     void updateTodo() {
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(token))).thenReturn(user);
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(falseToken))).thenThrow(ForbiddenException.class);
-        when(todosGateway.get(any(BigInteger.class))).thenReturn(todo);
-        when(todosGateway.create(any(Todo.class))).thenReturn(todo);
+        when(todosGateway.get(todo.getId())).thenReturn(todo);
+        when(todosGateway.update(todo.getId(), todo)).thenReturn(todo);
+        when(userUseCase.validateUserToken(todo.getUser_id(), token)).thenReturn(user);
+        when(userUseCase.validateUserToken(todo.getUser_id(), falseToken)).thenThrow(ForbiddenException.class);
 
-        assertEquals(todo, todosService.update(BigInteger.valueOf(1500), todo, token));
         assertEquals(
             todo.getDescription(),
-            todosService.update(BigInteger.valueOf(1500), todo2, token)
-                .getDescription()
+            todosService.update(todo.getId(), todo, token).getDescription()
         );
         assertDoesNotThrow(() -> {
-            todosService.update(BigInteger.valueOf(1500), todo, token);
+            todosService.update(todo.getId(), todo, token);
         });
         assertThrows(ForbiddenException.class, () -> {
-            todosService.update(BigInteger.valueOf(1500), todo, falseToken);
+            todosService.update(todo.getId(), todo, falseToken);
         });
 
-        verify(userUseCase, times(4)).validateUserToken(any(BigInteger.class), any(String.class));
-        verify(todosGateway, times(4)).get(any(BigInteger.class));
-        verify(todosGateway, times(3)).create(any(Todo.class));
+        verify(todosGateway, times(3)).get(todo.getId());
+        verify(todosGateway, times(2)).update(todo.getId(), todo);
+        verify(userUseCase, times(2)).validateUserToken(todo.getUser_id(), token);
+        verify(userUseCase, times(1)).validateUserToken(todo.getUser_id(), falseToken);
     }
 
     @Test
     void updateStatus() {
         TodosStatusDTO statusDTO = new TodosStatusDTO(Status.DONE);
 
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(token))).thenReturn(user);
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(falseToken))).thenThrow(ForbiddenException.class);
-        when(todosGateway.get(any(BigInteger.class))).thenReturn(todo);
-        when(todosGateway.create(any(Todo.class))).thenReturn(todo);
+        when(userUseCase.validateUserToken(todo.getUser_id(), token)).thenReturn(user);
+        when(userUseCase.validateUserToken(todo.getUser_id(), falseToken)).thenThrow(ForbiddenException.class);
+        when(todosGateway.get(todo.getId())).thenReturn(todo);
+        when(todosGateway.update(todo.getId(), todo)).thenReturn(todo);
 
-        assertEquals(todo, todosService.updateStatus(BigInteger.valueOf(1500), statusDTO.status(), token));
+        assertEquals(todo, todosService.updateStatus(todo.getId(), statusDTO.status(), token));
         assertEquals(
             todo.getStatus(),
-            todosService.update(BigInteger.valueOf(1500), todo, token).getStatus()
+            todosService.update(todo.getId(), todo, token).getStatus()
         );
         assertDoesNotThrow(() -> {
-            todosService.updateStatus(BigInteger.valueOf(1500), statusDTO.status(), token);
+            todosService.updateStatus(todo.getId(), statusDTO.status(), token);
         });
         assertThrows(ForbiddenException.class, () -> {
-            todosService.updateStatus(BigInteger.valueOf(1000), statusDTO.status(), falseToken);
+            todosService.updateStatus(todo.getId(), statusDTO.status(), falseToken);
         });
 
         verify(userUseCase, times(4)).validateUserToken(any(BigInteger.class), any(String.class));
         verify(todosGateway, times(4)).get(any(BigInteger.class));
-        verify(todosGateway, times(3)).create(any(Todo.class));
+        verify(todosGateway, times(3)).update(any(BigInteger.class), any(Todo.class));
     }
 
     @Test
     void deleteTodo() {
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(token))).thenReturn(user);
-        when(userUseCase.validateUserToken(any(BigInteger.class), eq(falseToken))).thenThrow(ForbiddenException.class);
-        when(todosGateway.get(any(BigInteger.class))).thenReturn(todo);
+        when(userUseCase.validateUserToken(todo.getUser_id(), token)).thenReturn(user);
+        when(userUseCase.validateUserToken(todo.getUser_id(), falseToken)).thenThrow(ForbiddenException.class);
+        when(todosGateway.get(todo.getId())).thenReturn(todo);
+        when(todosGateway.delete(todo.getId())).thenReturn(todo);
 
-        assertEquals(todo, todosService.delete(BigInteger.valueOf(1500), token));
+        assertEquals(todo.getDescription(), todosService.delete(todo.getId(), token).getDescription());
         assertEquals(
             todo.getPriority(),
-            todosService.delete(BigInteger.valueOf(1500), token)
+            todosService.delete(todo.getId(), token)
                 .getPriority()
         );
         assertDoesNotThrow(() -> {
-            todosService.delete(BigInteger.valueOf(1500), token);
+            todosService.delete(todo.getId(), token);
         });
         assertThrows(ForbiddenException.class, () -> {
-            todosService.delete(BigInteger.valueOf(1000), falseToken);
+            todosService.delete(todo.getId(), falseToken);
         });
 
-        verify(userUseCase, times(4)).validateUserToken(any(BigInteger.class), any(String.class));
+        verify(userUseCase, times(3)).validateUserToken(todo.getId(), token);
+        verify(userUseCase, times(1)).validateUserToken(todo.getId(), falseToken);
         verify(todosGateway, times(4)).get(any(BigInteger.class));
         verify(todosGateway, times(3)).delete(any(BigInteger.class));
     }
